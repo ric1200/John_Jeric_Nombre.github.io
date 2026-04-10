@@ -3,293 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name | Portfolio</title>
+    
+    <title>Happy Monthsary, Aking Mahal! ❤️</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* CSS STYLES */
+        /* Define colors and fonts */
         :root {
-            --primary-color: #2563eb;
-            --text-color: #1f2937;
-            --bg-color: #f9fafb;
-            --card-bg: #ffffff;
+            --rose-red: #e11d48;
+            --soft-pink: #fecdd3;
+            --creamy-white: #fff1f2;
+            --text-dark: #881337;
+            --heading-font: 'Playfair Display', serif;
+            --body-font: 'Montserrat', sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        /* Navigation */
-        nav {
-            background-color: var(--card-bg);
-            padding: 1rem 5%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
+            /* Beautiful gradient background */
+            background: linear-gradient(135deg, var(--creamy-white) 0%, var(--soft-pink) 100%);
+            color: var(--text-dark);
+            font-family: var(--body-font);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .nav-links a {
-            margin-left: 2rem;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        /* Sections General */
-        section {
-            padding: 6rem 5% 4rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--text-color);
-        }
-
-        /* Hero Section */
-        #home {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
-            padding-top: 0;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Keeps the floating hearts contained */
+            position: relative;
         }
 
-        #home h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        #home h1 span {
-            color: var(--primary-color);
-        }
-
-        #home p {
-            font-size: 1.2rem;
-            color: #4b5563;
-            margin-bottom: 2rem;
+        /* The main container (The Greeting Card) */
+        .greeting-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 4rem 2rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(225, 29, 72, 0.15);
+            text-align: center;
             max-width: 600px;
+            width: 90%;
+            border: 2px solid #fda4af;
+            z-index: 10; /* Keeps card above floating hearts */
+            position: relative;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: fadeInCard 1.2s ease-out forwards;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+        @keyframes fadeInCard {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
-        .btn:hover {
-            background-color: #1d4ed8;
+        /* Styling the header */
+        .header {
+            font-family: var(--heading-font);
+            font-style: italic;
+            color: var(--rose-red);
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
         }
 
-        /* Projects Section */
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+        /* Styling the date */
+        .date {
+            font-weight: 600;
+            color: #fb7185;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
         }
 
-        .project-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+        /* Decorative line */
+        .divider {
+            width: 100px;
+            height: 2px;
+            background-color: var(--soft-pink);
+            margin: 0 auto 3rem;
         }
 
-        .project-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .project-card h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .project-card p {
-            margin-bottom: 1.5rem;
-            color: #4b5563;
-        }
-
-        .project-tags {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            background-color: #e5e7eb;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            color: #374151;
-        }
-
-        .project-links a {
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 500;
-            margin-right: 1rem;
-        }
-
-        /* Contact Section */
-        #contact {
-            text-align: center;
-        }
-
-        .social-links {
-            margin-top: 2rem;
-        }
-
-        .social-links a {
-            margin: 0 1rem;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: bold;
+        /* The heartfelt message */
+        .message {
             font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 3rem;
         }
 
-        .social-links a:hover {
-            color: var(--primary-color);
+        .message p {
+            margin-bottom: 1.5rem;
         }
 
-        /* Footer */
-        footer {
-            background-color: var(--text-color);
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 4rem;
+        /* Pulsing heart icon at the bottom */
+        .closing-heart {
+            font-size: 2.5rem;
+            color: var(--rose-red);
+            display: block;
+            margin-top: 1rem;
+            animation: heartbeat 1.5s infinite;
         }
 
-        /* Mobile Responsiveness */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- Floating Hearts Animation --- */
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            background-color: var(--rose-red);
+            width: 30px;
+            height: 30px;
+            transform: rotate(-45deg);
+            opacity: 0.7;
+            animation: floatUp infinite ease-in;
+            z-index: 1;
+        }
+
+        .heart::after,
+        .heart::before {
+            content: '';
+            position: absolute;
+            background-color: var(--rose-red);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .heart::after {
+            top: -15px;
+            left: 0;
+        }
+
+        .heart::before {
+            top: 0;
+            left: 15px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: rotate(-45deg) translateY(0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: rotate(-45deg) translateY(-100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile specific styling for the heading */
         @media (max-width: 768px) {
-            #home h1 { font-size: 2.5rem; }
-            .nav-links { display: none; } /* Simple mobile menu hidden for brevity */
+            .header { font-size: 2.2rem; }
+            .message { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="#home" class="logo">Your Name.</a>
-        <div class="nav-links">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-        </div>
-    </nav>
+    <div class="heart" style="left: 10%; width: 20px; height: 20px; animation-duration: 6s; opacity: 0.5;"></div>
+    <div class="heart" style="left: 20%; animation-duration: 8s;"></div>
+    <div class="heart" style="left: 35%; width: 15px; height: 15px; animation-duration: 5s; animation-delay: 2s; opacity: 0.6;"></div>
+    <div class="heart" style="left: 50%; animation-duration: 10s; animation-delay: 1s;"></div>
+    <div class="heart" style="left: 65%; width: 25px; height: 25px; animation-duration: 7s; opacity: 0.4;"></div>
+    <div class="heart" style="left: 80%; animation-duration: 9s; animation-delay: 3s;"></div>
+    <div class="heart" style="left: 90%; width: 18px; height: 18px; animation-duration: 6s; animation-delay: 1.5s; opacity: 0.5;"></div>
 
-    <section id="home">
-        <h1>Hi, I'm <span>Your Name</span></h1>
-        <p>I am a passionate software developer, designer, and problem solver building things for the web.</p>
-        <a href="#projects" class="btn">View My Work</a>
-    </section>
-
-    <section id="about">
-        <h2>About Me</h2>
-        <p style="text-align: center; max-width: 800px; margin: 0 auto;">
-            I am a self-taught developer with a strong foundation in front-end technologies. I love creating responsive, user-friendly applications and am currently looking for my next big opportunity to grow and contribute to a great team. When I'm not coding, you can find me reading, hiking, or exploring new coffee shops.
-        </p>
-    </section>
-
-    <section id="projects">
-        <h2>My Projects</h2>
-        <div class="project-grid">
-            
-            <div class="project-card">
-                <h3>Project Title 1</h3>
-                <p>A brief description of what this project does, the problem it solves, and your role in building it.</p>
-                <div class="project-tags">
-                    <span class="tag">HTML</span>
-                    <span class="tag">CSS</span>
-                    <span class="tag">JavaScript</span>
-                </div>
-                <div class="project-links">
-                    <a href="#" target="_blank">Live Demo</a>
-                    <a href="#" target="_blank">GitHub Repo</a>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <h3>Project Title 2</h3>
-                <p>A brief description of what this project does, the problem it solves, and your role in building it.</p>
-                <div class="project-tags">
-                    <span class="tag">React</span>
-                    <span class="tag">Node.js</span>
-                </div>
-                <div class="project-links">
-                    <a href="#" target="_blank">Live Demo</a>
-                    <a href="#" target="_blank">GitHub Repo</a>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <h3>Project Title 3</h3>
-                <p>A brief description of what this project does, the problem it solves, and your role in building it.</p>
-                <div class="project-tags">
-                    <span class="tag">Python</span>
-                    <span class="tag">Flask</span>
-                </div>
-                <div class="project-links">
-                    <a href="#" target="_blank">Live Demo</a>
-                    <a href="#" target="_blank">GitHub Repo</a>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section id="contact">
-        <h2>Get In Touch</h2>
-        <p>I'm currently looking for new opportunities. Whether you have a question or just want to say hi, my inbox is always open!</p>
-        <a href="mailto:your.email@example.com" class="btn" style="margin-top: 2rem;">Say Hello</a>
+    <div class="greeting-card">
         
-        <div class="social-links">
-            <a href="https://github.com/yourusername" target="_blank">GitHub</a>
-            <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a>
-            <a href="https://twitter.com/yourusername" target="_blank">Twitter</a>
-        </div>
-    </section>
+        <h1 class="header">Happy Monthsary, Juliana Love!</h1>
+        
+        <p class="date">Celebrating Another Month of Us — March 2026</p>
+        
+        <div class="divider"></div>
 
-    <footer>
-        <p>&copy; 2026 Your Name. Built from scratch.</p>
-    </footer>
+        <div class="message">
+            <p>
+                Isang buwan nanaman ang lumipas na puno ng saya, tawa, at pagmamahal. Salamat sa pagiging inspiration ko sa lahat ng bagay na ginagawa ko.
+            </p>
+            <p>
+                Kahit busy ako minsan sa school sa mga pinag gagawa ko sa buhay, tandaan mo na ikaw ang pinaka-importanteng babae sa buhay ko. 😉 Looking forward to many more months and years of happiness with you.
+            </p>
+        </div>
+
+        <p style="color: var(--text-dark); font-weight: 600; font-size: 1.3rem;">Mahal na mahal kita!</p>
+        <span class="closing-heart" aria-label="heart icon">&#10084;</span>
+    </div>
 
 </body>
 </html>
