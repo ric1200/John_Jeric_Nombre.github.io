@@ -162,10 +162,30 @@
             }
         }
 
-        /* Mobile specific styling for the heading */
+        /* Mobile specific styling */
         @media (max-width: 768px) {
             .header { font-size: 2.2rem; }
             .message { font-size: 1.1rem; }
+        }
+
+        /* --- Button Style --- */
+        .btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 12px 30px;
+            background-color: var(--rose-red);
+            color: white;
+            text-decoration: none;
+            font-family: var(--body-font);
+            font-weight: 600;
+            border-radius: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+        }
+
+        .btn:hover {
+            background-color: #be123c; /* Darker red pag tinapatan ng mouse */
+            transform: translateY(-3px) scale(1.05);
         }
     </style>
 </head>
@@ -183,7 +203,7 @@
         
         <h1 class="header">Happy Monthsary, Juliana Love!</h1>
         
-        <p class="date">Celebrating Another Month of Us — March 2026</p>
+        <p class="date">Celebrating Another Month of Us — April 2026</p>
         
         <div class="divider"></div>
 
@@ -198,6 +218,11 @@
 
         <p style="color: var(--text-dark); font-weight: 600; font-size: 1.3rem;">Mahal na mahal kita!</p>
         <span class="closing-heart" aria-label="heart icon">&#10084;</span>
+        
+        <br>
+        
+        <a href="picture.jpg" class="btn" target="_blank">Tingnan moto</a>
+        
     </div>
 
 </body>
