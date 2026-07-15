@@ -6,7 +6,6 @@
   <title>UCL Counseling Portal</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -31,7 +30,7 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      min-height: 100vh; /* Changed to min-height for better scrolling behavior */
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
@@ -45,7 +44,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* Update this path to your actual image location */
       background: url("assets/image/bg_img.jpg") no-repeat center center; 
       background-size: cover;
       z-index: -2;
@@ -86,7 +84,7 @@
 
     /* --- MAIN CONTENT --- */
     .container {
-      flex: 1; /* This pushes the footer to the bottom */
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -216,7 +214,7 @@
     .footer {
       text-align: center;
       padding: 20px;
-      background: rgba(0, 0, 0, 0.4); /* Subtle transparent dark background */
+      background: rgba(0, 0, 0, 0.4);
       color: rgba(255, 255, 255, 0.8);
       font-size: 0.85rem;
       margin-top: auto;
@@ -297,10 +295,11 @@
 
   <script>
     function goTo(subdomain) {
+      // Inayos ang mga links para magturo sa .html files
       const urls = {
-        'students': 'https://students.codeflix.site',
-        'counselor': 'https://codeflix.site/counselor',
-        'reports': 'https://reports.codeflix.site',
+        'students': 'students/index.html',
+        'counselor': 'counselor/index.html',
+        'reports': 'reports/index.html',
         'admin': 'admin/index.html'
       };
       if (urls[subdomain]) window.location.href = urls[subdomain];
