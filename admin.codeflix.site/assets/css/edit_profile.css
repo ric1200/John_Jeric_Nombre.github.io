@@ -1,0 +1,191 @@
+/* FILE: assets/css/edit_profile.css */
+
+/* Base Styles */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef2f7; 
+    color: #333;
+}
+
+.main-content {
+    margin-left: 290px; /* Match sa Manage Users sidebar space */
+    padding: 30px 40px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container { 
+    max-width: 1000px; 
+    margin: 0 auto; 
+}
+
+/* Page Header Design */
+.page-header {
+    background: #ffffff;
+    padding: 24px 30px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #0a192f;
+}
+
+.page-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+    color: #0a192f;
+}
+
+.page-header p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+/* Data Card Style */
+.data-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 1.1rem;
+    color: #0a192f;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #edf2f9;
+    font-weight: 600;
+}
+
+/* Form Grid */
+.form-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+    margin-bottom: 25px; 
+}
+.form-grid.two-cols { 
+    grid-template-columns: 1fr 1fr; 
+}
+
+.form-group { 
+    margin-bottom: 20px; 
+}
+
+.form-group label { 
+    display: block; 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    color: #64748b; 
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Search Input Style applied to Form Controls */
+.search-wrapper { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+}
+
+.input-icon { 
+    position: absolute; 
+    left: 12px; 
+    color: #a0aec0; 
+    font-size: 0.9rem; 
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px 12px 38px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    /* UPDATED: Mas dark at mas clear na text para sa actual input */
+    color: #111827; 
+    font-weight: 500; 
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* ADDED: Placeholder styling para manatiling gray ang examples ("e.g. Ramos") */
+.form-control::placeholder {
+    color: #94a3b8;
+    font-weight: normal;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #2d78ff;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(45, 120, 255, 0.1);
+}
+
+/* Modern Buttons */
+.btn {
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-save {
+    background: #2d78ff;
+    color: #ffffff;
+}
+
+.btn-save:hover {
+    background: #1a62e6;
+    transform: translateY(-1px);
+}
+
+.btn-cancel {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
+.btn-cancel:hover {
+    background: #cbd5e1;
+}
+
+.form-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #edf2f9;
+    display: flex;
+    gap: 15px;
+}
+
+/* Alert Styling */
+.alert {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+.alert.success { 
+    background: #dcfce7; 
+    color: #166534; 
+    border-left: 5px solid #10b981; 
+}
+.alert.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 5px solid #ef4444;
+}
+
+@media (max-width: 992px) {
+    .main-content { margin-left: 0; }
+    .form-grid, .form-grid.two-cols { grid-template-columns: 1fr; }
+}

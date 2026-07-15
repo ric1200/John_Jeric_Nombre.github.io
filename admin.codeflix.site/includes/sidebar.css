@@ -1,0 +1,143 @@
+/* /includes/sidebar.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 290px;
+    height: 100vh;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    
+    background: rgba(10, 25, 47, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: #ffffff;
+    z-index: 1000;
+}
+
+/* Updated Header Design para sa Logo */
+.sidebar-header {
+    text-align: center; /* Nakasentro na ang logo at title */
+    margin-bottom: 35px;
+    padding: 0 5px;
+}
+
+.sidebar-logo {
+    width: 80px; /* Pwede mo itong lakihan o liitan (e.g. 100px) */
+    height: auto;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); /* Para hindi masyadong flat */
+}
+
+.sidebar-header h2 {
+    font-size: 1.25rem; /* Sakto lang na size para hindi bumaba ng sobrang haba */
+    font-weight: 700;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.nav-links a i {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+.nav-links a:hover i {
+    color: #ffffff;
+}
+
+.nav-links a.active {
+    background: rgba(45, 120, 255, 0.15);
+    border: 1px solid rgba(45, 120, 255, 0.4);
+    color: #ffffff;
+    font-weight: 600;
+}
+.nav-links a.active i {
+    color: #2d78ff;
+}
+
+/* Logout Section Card */
+.logout-section {
+    margin-top: auto;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.logout-section h3 {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.logout-section p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 15px 0;
+    line-height: 1.4;
+}
+
+/* RED Logout Button Design */
+.logout-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ff4d4d, #dc3545); /* Red Gradient */
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #ff6666, #c82333);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    transform: translateY(-2px);
+}

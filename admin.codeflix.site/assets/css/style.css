@@ -1,0 +1,212 @@
+/* ===== Global Reset ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eef2f7; /* Light grey background */
+  position: relative;   /* Important for positioning the back button */
+}
+
+/* ===== Back Button (Upper Left) ===== */
+.back-btn {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  text-decoration: none;
+  background-color: #ffffff;
+  color: #004080; /* Matches the theme blue */
+  padding: 10px 20px;
+  border-radius: 30px; /* Pill shape */
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between arrow and text */
+  transition: all 0.3s ease;
+  z-index: 1000; /* Ensures it stays on top of everything */
+}
+
+.back-btn:hover {
+  background-color: #004080;
+  color: #ffffff;
+  transform: translateX(-3px);
+  box-shadow: 0 6px 15px rgba(0, 64, 128, 0.2);
+}
+
+/* ===== Login Container ===== */
+.login-container {
+  display: flex;
+  width: 900px;
+  height: 550px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  background: white;
+}
+
+/* ===== Left Section (Image) ===== */
+.left-section {
+  flex: 1;
+  /* Make sure this path is correct */
+  background: url("../image/bg_img.jpg") no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+
+.left-section .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 38, 77, 0.85); /* Dark Blue Overlay */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 50px;
+}
+
+.left-section h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+.left-section p {
+  font-size: 16px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* ===== Right Section (Form) ===== */
+.right-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  padding: 40px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 320px;
+}
+
+.login-form h2 {
+  text-align: center;
+  color: #003366;
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 26px;
+}
+
+.login-form .subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box; 
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #004080;
+  box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
+}
+
+/* Login Button */
+.login-btn {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  background: linear-gradient(135deg, #004080, #0074d9);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background: linear-gradient(135deg, #003366, #005bb5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 64, 128, 0.2);
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* Links & Footer */
+.links {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.links a {
+  text-decoration: none;
+  color: #004080;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 12px;
+  color: #999;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 900px) {
+  .login-container {
+    width: 90%;
+    max-width: 450px;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .left-section {
+    display: none; /* Hide image on mobile for a cleaner look */
+  }
+
+  .right-section {
+    padding: 40px 30px;
+  }
+  
+  .back-btn {
+    top: 20px;
+    left: 20px;
+  }
+}

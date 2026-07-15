@@ -1,0 +1,423 @@
+/* FILE: assets/css/audit_logs.css */
+
+/* =========================================
+   Base & Typography
+   ========================================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #eef2f7;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.text-primary { color: #2d78ff; }
+.text-muted { color: #94a3b8; }
+
+/* =========================================
+   Sidebar
+   ========================================= */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: #0a192f;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    box-sizing: border-box; 
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.sidebar-logo {
+  width: 40px;
+  height: auto;
+}
+
+.sidebar h2 {
+    margin: 0;
+    color: #fff;
+    border-bottom: none;
+    font-size: 1.2rem;
+    padding-bottom: 0;
+}
+
+.sidebar a {
+    display: block;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: all 0.3s;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background: rgba(45, 120, 255, 0.15);
+    color: #2d78ff;
+    padding-left: 20px;
+}
+
+/* =========================================
+   Main Content & Containers
+   ========================================= */
+.main-content {
+    margin-left: 290px;
+    padding: 30px 40px;
+    transition: margin-left 0.3s;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 25px;
+    background: #ffffff;
+    padding: 24px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #0a192f;
+}
+
+.page-header h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.8rem;
+    color: #0a192f;
+    border: none;
+    padding: 0;
+}
+
+.subtitle {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* =========================================
+   Filter Card & Toolbar
+   ========================================= */
+.filter-card {
+    background: #ffffff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    margin-bottom: 25px;
+    border: 1px solid #e2e8f0;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.input-group {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+}
+
+.search-group {
+    flex: 2;
+}
+
+.input-group i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    transition: all 0.2s;
+    background: #f8fafc;
+    color: #111827; 
+    font-weight: 500;
+}
+
+.input-group input::placeholder {
+    color: #94a3b8;
+    font-weight: normal;
+}
+
+.input-group input:focus {
+    border-color: #2d78ff;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(45,120,255,0.1);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* =========================================
+   Buttons
+   ========================================= */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-primary { background-color: #2d78ff; color: #fff; }
+.btn-primary:hover { background-color: #1a62e6; transform: translateY(-1px); }
+
+.btn-secondary { background-color: #64748b; color: #fff; }
+.btn-secondary:hover { background-color: #475569; }
+
+.btn-light { background-color: #f1f5f9; color: #475569; padding: 10px 14px; }
+.btn-light:hover { background-color: #e2e8f0; color: #0f172a; }
+
+/* =========================================
+   Modern Table Design
+   ========================================= */
+.table-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+table th, table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+table thead th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Table Specific Cells */
+.time-cell { color: #64748b; }
+.time-cell small { color: #94a3b8; }
+.user-cell strong { color: #0f172a; display: block; }
+.user-meta { font-size: 0.8rem; color: #94a3b8; }
+.table-name { font-family: monospace; background: #f1f5f9; padding: 3px 6px; border-radius: 4px; color: #d946ef; }
+.ip-cell { color: #64748b; font-family: monospace; }
+.ip-cell i { color: #cbd5e1; margin-right: 5px; }
+
+/* Data Changes Cell */
+.data-cell {
+    white-space: normal;
+    min-width: 250px;
+}
+.data-list { display: flex; flex-direction: column; gap: 4px; }
+.data-item { font-size: 0.85rem; line-height: 1.4; }
+.data-key { font-weight: 600; color: #64748b; }
+.data-val { color: #0f172a; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-family: monospace; word-break: break-all;}
+
+/* Empty State */
+.empty-state { text-align: center; padding: 50px 20px; color: #94a3b8; }
+.empty-state i { font-size: 3rem; margin-bottom: 10px; color: #cbd5e1; }
+
+/* =========================================
+   Modern Soft Badges
+   ========================================= */
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-success { background-color: #dcfce7; color: #166534; }
+.badge-danger { background-color: #fee2e2; color: #991b1b; }
+.badge-warning { background-color: #fef9c3; color: #854d0e; }
+.badge-info { background-color: #e0f2fe; color: #075985; }
+
+/* =========================================
+   Pagination
+   ========================================= */
+.pagination {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.page-btn:hover:not(.disabled) {
+    border-color: #2d78ff;
+    color: #2d78ff;
+    background: #f8fafc;
+}
+
+.page-btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    background: #f1f5f9;
+}
+
+.page-info {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+.page-info strong {
+    color: #0f172a;
+}
+
+/* =========================================
+   Print Styles (UPDATED FOR LANDSCAPE & FIXING CUT-OFFS)
+   ========================================= */
+@media print {
+    /* Set page to Landscape by default to fit wide tables */
+    @page { 
+        size: landscape; 
+        margin: 10mm; /* Minimal margins for maximum space */
+    }
+    
+    body { 
+        background-color: #fff; 
+    }
+    
+    .no-print, .sidebar { 
+        display: none !important; 
+    }
+    
+    /* Remove sidebar margins and full width */
+    .main-content { 
+        margin: 0 !important; 
+        padding: 0 !important; 
+        width: 100% !important; 
+    }
+    
+    .container { 
+        width: 100% !important; 
+        max-width: 100% !important; 
+    }
+
+    /* Clean up headers and borders */
+    .table-card { 
+        box-shadow: none !important; 
+        border: none !important; 
+        overflow: visible !important; /* Important: removes scrolling constraints so it prints */
+    }
+    
+    .table-responsive { 
+        overflow: visible !important; /* Stop clipping */
+    }
+    
+    .page-header { 
+        box-shadow: none !important; 
+        border-left: none !important; 
+        padding: 0 !important; 
+        margin-bottom: 20px !important; 
+    }
+    
+    /* Table specific print styles */
+    table { 
+        width: 100% !important; 
+        table-layout: auto !important; /* Let it resize columns naturally */
+    }
+    
+    /* Make text smaller and wrap correctly */
+    table th, table td { 
+        padding: 8px 6px !important; 
+        border-bottom: 1px solid #ccc !important; 
+        font-size: 10pt !important; /* Slightly smaller font for print */
+        white-space: normal !important; /* FORCE text to wrap! */
+        word-wrap: break-word !important; 
+    }
+    
+    table th { 
+        background-color: transparent !important; 
+        color: #000 !important; 
+        border-bottom: 2px solid #000 !important; 
+        font-size: 9pt !important;
+    }
+    
+    /* Give the Data Cell a specific max width so it doesn't push others away */
+    .data-cell {
+        max-width: 300px;
+    }
+    
+    .data-val { 
+        background: transparent !important; 
+    }
+    
+    /* Adjust badges for print so they look like bordered text */
+    .badge { 
+        border: 1px solid #666; 
+        color: #000 !important; 
+        background: transparent !important; 
+    }
+}

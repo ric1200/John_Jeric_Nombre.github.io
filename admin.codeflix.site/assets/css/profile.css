@@ -1,0 +1,198 @@
+/* FILE: assets/css/profile.css */
+
+/* Base Styles mula sa manage_users.css */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef2f7; 
+    color: #333;
+}
+
+.main-content {
+    margin-left: 290px; /* Consistent sidebar margin */
+    padding: 30px 40px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container { 
+    max-width: 1100px; 
+    margin: 0 auto; 
+}
+
+/* Page Header Design */
+.page-header {
+    background: #ffffff;
+    padding: 24px 30px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #0a192f;
+}
+
+.page-header h1 { 
+    margin: 0; 
+    font-size: 1.8rem; 
+    color: #0a192f; 
+}
+
+.subtitle { 
+    margin: 5px 0 0 0; 
+    color: #6c757d; 
+    font-size: 1rem; 
+}
+
+/* Profile Grid Layout */
+.profile-grid { 
+    display: grid; 
+    grid-template-columns: 350px 1fr; 
+    gap: 24px; 
+}
+
+/* Card Styles */
+.data-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+}
+
+/* Avatar Section */
+.avatar-section { 
+    text-align: center; 
+}
+
+.avatar-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 20px auto;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #f8fafc;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-avatar-edit {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #2d78ff; /* Same as btn-search */
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.btn-avatar-edit:hover { 
+    background: #1a62e6; 
+    transform: scale(1.1); 
+}
+
+.profile-name { 
+    font-size: 1.4rem; 
+    color: #0a192f; 
+    margin-bottom: 10px; 
+    font-weight: 700; 
+}
+
+/* Badge from manage_users.css */
+.badge-role {
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+/* Detail Groups */
+.section-title {
+    font-size: 1.1rem;
+    color: #0a192f;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #edf2f9;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f8fafc; /* Same as search-input bg */
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.detail-icon {
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    color: #2d78ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.detail-label { 
+    display: block; 
+    font-size: 0.75rem; 
+    color: #64748b; 
+    text-transform: uppercase; 
+    font-weight: 700; 
+}
+
+.detail-value { 
+    font-size: 1rem; 
+    color: #1e293b; 
+    font-weight: 500; 
+}
+
+/* Buttons */
+.btn-edit-profile {
+    width: 100%;
+    margin-top: 20px;
+    background: #2d78ff;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.3s ease;
+    box-sizing: border-box;
+}
+
+.btn-edit-profile:hover { 
+    background: #1a62e6; 
+    box-shadow: 0 4px 12px rgba(45, 120, 255, 0.3); 
+}
+
+@media (max-width: 900px) {
+    .main-content { margin-left: 0; }
+    .profile-grid { grid-template-columns: 1fr; }
+}
