@@ -297,10 +297,17 @@
     function goTo(subdomain) {
       // Inayos ang mga links para magturo sa .html files
       const urls = {
+<<<<<<< HEAD
         'students': 'students/index.html',
         'counselor': 'counselor/index.html',
         'reports': 'reports/index.html',
         'admin': 'admin/index.html'
+=======
+        'students': 'https://students.codeflix.site',
+        'counselor': 'https://codeflix.site/counselor',
+        'reports': 'https://reports.codeflix.site',
+        'admin': 'admin/index.php'
+>>>>>>> 05ff0dff8453bcd486aeacc1038c0e2ffb85a359
       };
       if (urls[subdomain]) window.location.href = urls[subdomain];
     }
