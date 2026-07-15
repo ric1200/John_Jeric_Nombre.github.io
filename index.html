@@ -1,226 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Happy Monthsary</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Define colors and fonts */
-        :root {
-            --rose-red: #e11d48;
-            --soft-pink: #fecdd3;
-            --creamy-white: #fff1f2;
-            --text-dark: #881337;
-            --heading-font: 'Playfair Display', serif;
-            --body-font: 'Montserrat', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UCL Counseling Portal</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <style>
+    /* --- CSS RESET & VARIABLES --- */
+    :root {
+      --primary-color: #004d40;
+      --secondary-color: #00695c;
+      --accent-color: #00796b;
+      --text-white: #ffffff;
+      --text-dark: #333333;
+      --card-bg: #ffffff;
+      /* Blue Variables for Announcement */
+      --blue-accent: #1565C0;
+      --blue-dark: #0D47A1;
+    }
 
-        body {
-            /* Beautiful gradient background */
-            background: linear-gradient(135deg, var(--creamy-white) 0%, var(--soft-pink) 100%);
-            color: var(--text-dark);
-            font-family: var(--body-font);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden; /* Keeps the floating hearts contained */
-            position: relative;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        /* The main container (The Greeting Card) */
-        .greeting-card {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 4rem 2rem;
-            border-radius: 30px;
-            box-shadow: 0 15px 40px rgba(225, 29, 72, 0.15);
-            text-align: center;
-            max-width: 600px;
-            width: 90%;
-            border: 2px solid #fda4af;
-            z-index: 10; /* Keeps card above floating hearts */
-            position: relative;
-            transform: translateY(-20px);
-            opacity: 0;
-            animation: fadeInCard 1.2s ease-out forwards;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh; /* Changed to min-height for better scrolling behavior */
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      color: var(--text-white);
+    }
 
-        @keyframes fadeInCard {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+    /* --- BACKGROUND IMAGE FIX --- */
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* Update this path to your actual image location */
+      background: url("assets/image/bg_img.jpg") no-repeat center center; 
+      background-size: cover;
+      z-index: -2;
+    }
 
-        /* Styling the header */
-        .header {
-            font-family: var(--heading-font);
-            font-style: italic;
-            color: var(--rose-red);
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 30, 60, 0.85);
+      z-index: -1;
+    }
 
-        /* Styling the date */
-        .date {
-            font-weight: 600;
-            color: #fb7185;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.9rem;
-            margin-bottom: 3rem;
-        }
+    /* --- NAVBAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background: linear-gradient(90deg, #006064, #1a237e); 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
 
-        /* Decorative line */
-        .divider {
-            width: 100px;
-            height: 2px;
-            background-color: var(--soft-pink);
-            margin: 0 auto 3rem;
-        }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
 
-        /* The heartfelt message */
-        .message {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: var(--text-dark);
-            margin-bottom: 3rem;
-        }
+    .nav-brand img {
+      height: 50px; 
+      width: auto;
+    }
 
-        .message p {
-            margin-bottom: 1.5rem;
-        }
+    /* --- MAIN CONTENT --- */
+    .container {
+      flex: 1; /* This pushes the footer to the bottom */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        /* Pulsing heart icon at the bottom */
-        .closing-heart {
-            font-size: 2.5rem;
-            color: var(--rose-red);
-            display: block;
-            margin-top: 1rem;
-            animation: heartbeat 1.5s infinite;
-        }
+    /* Welcome Section */
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 40px;
+      margin-top: 20px;
+    }
 
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+    .welcome-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
 
-        /* --- Floating Hearts Animation --- */
-        .heart {
-            position: absolute;
-            bottom: -50px;
-            background-color: var(--rose-red);
-            width: 30px;
-            height: 30px;
-            transform: rotate(-45deg);
-            opacity: 0.7;
-            animation: floatUp infinite ease-in;
-            z-index: 1;
-        }
+    .welcome-section p {
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 1rem;
+      color: #e0f2f1;
+      line-height: 1.6;
+    }
 
-        .heart::after,
-        .heart::before {
-            content: '';
-            position: absolute;
-            background-color: var(--rose-red);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
+    /* Announcement Section */
+    .section-header {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+    }
 
-        .heart::after {
-            top: -15px;
-            left: 0;
-        }
+    .announcement-card {
+      background: var(--card-bg);
+      color: var(--text-dark);
+      width: 100%;
+      max-width: 850px;
+      border-radius: 15px;
+      padding: 25px 30px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 50px;
+      position: relative;
+      border-left: 8px solid var(--blue-accent); 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
 
-        .heart::before {
-            top: 0;
-            left: 15px;
-        }
+    .badge {
+      color: var(--blue-accent);
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
 
-        @keyframes floatUp {
-            0% {
-                transform: rotate(-45deg) translateY(0);
-                opacity: 0.7;
-            }
-            100% {
-                transform: rotate(-45deg) translateY(-100vh);
-                opacity: 0;
-            }
-        }
+    .announcement-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+    }
 
-        /* Mobile specific styling */
-        @media (max-width: 768px) {
-            .header { font-size: 2.2rem; }
-            .message { font-size: 1.1rem; }
-        }
+    .schedule-tag {
+      background-color: var(--blue-dark);
+      color: white;
+      align-self: flex-start;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        /* --- Button Style --- */
-        .btn {
-            display: inline-block;
-            margin-top: 2rem;
-            padding: 12px 30px;
-            background-color: var(--rose-red);
-            color: white;
-            text-decoration: none;
-            font-family: var(--body-font);
-            font-weight: 600;
-            border-radius: 30px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
-        }
+    /* Portals Grid */
+    .portals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
 
-        .btn:hover {
-            background-color: #be123c; /* Darker red pag tinapatan ng mouse */
-            transform: translateY(-3px) scale(1.05);
-        }
-    </style>
+    .portal-card {
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 30px 25px;
+      border-radius: 12px;
+      text-align: left;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 4px solid transparent;
+    }
+
+    .portal-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+      border-bottom: 4px solid #00897b;
+    }
+
+    .card-icon {
+      font-size: 1.8rem;
+      color: #00695c;
+      margin-bottom: 15px;
+    }
+
+    .portal-card h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #004d40;
+    }
+
+    .portal-card p {
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    /* --- FOOTER --- */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.4); /* Subtle transparent dark background */
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.85rem;
+      margin-top: auto;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .welcome-section h1 { font-size: 1.8rem; }
+      .navbar { padding: 15px 20px; }
+      .nav-brand span { display: none; }
+      .announcement-card { padding: 20px; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="heart" style="left: 10%; width: 20px; height: 20px; animation-duration: 6s; opacity: 0.5;"></div>
-    <div class="heart" style="left: 20%; animation-duration: 8s;"></div>
-    <div class="heart" style="left: 35%; width: 15px; height: 15px; animation-duration: 5s; animation-delay: 2s; opacity: 0.6;"></div>
-    <div class="heart" style="left: 50%; animation-duration: 10s; animation-delay: 1s;"></div>
-    <div class="heart" style="left: 65%; width: 25px; height: 25px; animation-duration: 7s; opacity: 0.4;"></div>
-    <div class="heart" style="left: 80%; animation-duration: 9s; animation-delay: 3s;"></div>
-    <div class="heart" style="left: 90%; width: 18px; height: 18px; animation-duration: 6s; animation-delay: 1.5s; opacity: 0.5;"></div>
+  <div class="bg-image"></div>
+  <div class="overlay"></div>
 
-    <div class="greeting-card">
-        
-        <h1 class="header">Happy Monthsary,</h1>
-        
-        <p class="date">Celebrating Another Month of Us — April 2026</p>
-        
-        <div class="divider"></div>
-
-        <div class="message">
-            <p>
-                sdfgjksjkgjshfgbhsdbnfgsd
-            <p>
-               sdfknsdfnsjnfjksdnfjnsdkjfnsdv
-            </p>
-        </div>
-
-        <p style="color: var(--text-dark); font-weight: 600; font-size: 1.3rem;">Mahasdasdasdascaawfgweg</p>
-        <span class="closing-heart" aria-label="heart icon">&#10084;</span>
-        
-        <br>
-        
+  <header class="navbar">
+    <div class="nav-brand">
+      <img src="assets/image/union_logo1.png" alt="Phinma Logo"> 
+      <span>UCL Counseling Office</span>
     </div>
+  </header>
+
+  <div class="container">
+
+    <div class="welcome-section">
+      <h1>Welcome</h1>
+      <p>A centralized platform for managing counseling sessions, optimizing student support, and ensuring efficient mental health resource management.</p>
+    </div>
+
+    <h2 class="section-header">Announcements</h2>
+    <div class="announcement-card">
+      <span class="badge">IMPORTANT UPDATE</span>
+      <h3>Guidance Office Operating Hours</h3>
+      <div class="schedule-tag">
+        <i class="fa-regular fa-clock"></i>
+        <span>Mon - Fri: 8:00 AM - 5:00 PM</span>
+      </div>
+    </div>
+
+    <h2 class="section-header">System Portals</h2>
+    <div class="portals-grid">
+       
+      <div class="portal-card" onclick="goTo('admin')">
+        <div class="card-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <h4>Admin Portal</h4>
+        <p>Manage user creation and system settings.</p>
+      </div>
+
+      <div class="portal-card" onclick="goTo('counselor')">
+        <div class="card-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+        <h4>Counselor Portal</h4>
+        <p>View schedules, loads, and assigned students.</p>
+      </div>
+
+      <div class="portal-card" onclick="goTo('students')">
+        <div class="card-icon"><i class="fa-regular fa-comments"></i></div>
+        <h4>Student Portal</h4>
+        <p>Request appointments and view resources.</p>
+      </div>
+
+      <div class="portal-card" onclick="goTo('reports')">
+        <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <h4>Analytics & Reports</h4>
+        <p>View system statistics, counseling trends, and generate summaries.</p>
+      </div>
+       
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 UCL Counseling Office. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function goTo(subdomain) {
+      const urls = {
+        'students': 'https://students.codeflix.site',
+        'counselor': 'https://codeflix.site/counselor',
+        'reports': 'https://reports.codeflix.site',
+        'admin': 'https://admin.codeflix.site'
+      };
+      if (urls[subdomain]) window.location.href = urls[subdomain];
+    }
+  </script>
 
 </body>
 </html>
