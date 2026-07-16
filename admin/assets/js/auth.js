@@ -7,9 +7,12 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Kunin ang mga HTML Elements
 const loginForm = document.getElementById('loginForm');
 const errorDiv = document.getElementById('error-message');
 const loginBtn = document.getElementById('loginBtn');
+const passwordInput = document.getElementById('password');
+const showPasswordCheckbox = document.getElementById('showPassword');
 
 // Helper function to log audit events
 async function logAudit(userId, action, detailsObj) {
@@ -34,15 +37,18 @@ function showError(message) {
   loginBtn.disabled = false;
 }
 
+// ==========================================
+// HAKBANG 1: LOGIN FORM SUBMISSION
+// ==========================================
 loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault(); // Pipigilan nito ang pag-reload ng page at paglagay ng password sa URL
+  e.preventDefault(); // Pigilan ang pag-refresh ng page
   
   errorDiv.style.display = 'none';
   loginBtn.textContent = 'Logging in...';
   loginBtn.disabled = true;
 
   const email = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value;
+  const password = passwordInput.value;
 
   if (!email || !password) {
     showError("Please enter email and password.");
@@ -74,7 +80,6 @@ loginForm.addEventListener('submit', async (e) => {
     .single();
 
   if (profileError || !adminProfile) {
-    // Kung registered user pero walang admin profile, i-kickout natin
     await logAudit(user.id, 'LOGIN_FAILED_UNAUTHORIZED', {
       email: email,
       reason: 'User exists but is not an Admin.'
@@ -85,7 +90,7 @@ loginForm.addEventListener('submit', async (e) => {
     return;
   }
 
-  // 3. SUCCESSFUL LOGIN & AUTHORIZED ADMIN
+  // 3. SUCCESSFUL LOGIN
   await logAudit(user.id, 'LOGIN_SUCCESS', {
     message: 'Admin logged in successfully',
     email: email,
@@ -96,17 +101,18 @@ loginForm.addEventListener('submit', async (e) => {
   sessionStorage.setItem('role', adminProfile.access_level);
   sessionStorage.setItem('division', adminProfile.department);
 
-  // Redirect to dashboard (Lumabas muna ng admin folder para mapunta sa sysad)
+  // Redirect papuntang dashboard
   window.location.href = '../sysad/dashboard.html'; 
-  // Code para sa Show/Hide Password Toggle
-const passwordInput = document.getElementById('password');
-const showPasswordCheckbox = document.getElementById('showPassword');
+}); // <-- Dito nagtatapos ang submit listener
 
+
+// ==========================================
+// HAKBANG 2: SHOW/HIDE PASSWORD (Nasa labas!)
+// ==========================================
 showPasswordCheckbox.addEventListener('change', function() {
   if (this.checked) {
     passwordInput.type = 'text'; // Ipapakita ang password
   } else {
     passwordInput.type = 'password'; // Itatago ulit ang password
   }
-});
 });
