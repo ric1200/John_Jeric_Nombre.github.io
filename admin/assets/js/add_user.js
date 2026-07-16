@@ -27,15 +27,21 @@ function showStatus(text, color) {
   messageDiv.style.color = color;
 }
 
-// MAG-REGISTER NG ADMIN
+// MAG-REGISTER NG ADMIN (Corrected Metadata)
 async function createAdminWithTrigger(email, password, department) {
+  // Kunin ang username mula sa email (bago mag-@)
+  const username = email.split('@')[0];
+
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
     options: {
       data: {
-        role_type: 'admin',
-        department: department
+        role_type: 'ADMIN', // TAMA: Naka-uppercase para tumugma sa Postgres ENUM
+        department: department,
+        first_name: 'Admin', // Default metadata para sa database table
+        last_name: 'User',
+        username: username
       }
     }
   });
@@ -45,19 +51,26 @@ async function createAdminWithTrigger(email, password, department) {
   } else {
     showStatus("Success! Admin account created. Profile linked automatically.", "green");
     addUserForm.reset();
+    adminFields.style.display = 'none';
   }
 }
 
-// MAG-REGISTER NG COUNSELOR
+// MAG-REGISTER NG COUNSELOR (Corrected Metadata)
 async function createCounselorWithTrigger(email, password, spec, office) {
+  // Kunin ang username mula sa email
+  const username = email.split('@')[0];
+
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
     options: {
       data: {
-        role_type: 'counselor',
+        role_type: 'COUNSELOR', // TAMA: Naka-uppercase para tumugma sa Postgres ENUM
         specialization: spec,
-        office_location: office
+        office_location: office,
+        first_name: 'Counselor',
+        last_name: 'User',
+        username: username
       }
     }
   });
@@ -67,6 +80,7 @@ async function createCounselorWithTrigger(email, password, spec, office) {
   } else {
     showStatus("Success! Counselor account created. Profile linked automatically.", "green");
     addUserForm.reset();
+    counselorFields.style.display = 'none';
   }
 }
 
