@@ -98,4 +98,15 @@ loginForm.addEventListener('submit', async (e) => {
 
   // Redirect to dashboard (Lumabas muna ng admin folder para mapunta sa sysad)
   window.location.href = '../sysad/dashboard.html'; 
+  // Code para sa Show/Hide Password Toggle
+const passwordInput = document.getElementById('password');
+const showPasswordCheckbox = document.getElementById('showPassword');
+
+showPasswordCheckbox.addEventListener('change', function() {
+  if (this.checked) {
+    passwordInput.type = 'text'; // Ipapakita ang password
+  } else {
+    passwordInput.type = 'password'; // Itatago ulit ang password
+  }
+});
 });
