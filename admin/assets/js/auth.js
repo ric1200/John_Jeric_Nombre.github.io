@@ -1,9 +1,10 @@
 // Import the Supabase client from CDN
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-// Replace these with your actual Supabase project URL and ANON KEY
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+// Naka-hardcode na ang tamang credentials mo para mabasa ng GitHub Pages
+const supabaseUrl = 'https://misuisycikabaafommxo.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pc3Vpc3ljaWthYmFhZm9tbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODk0MjksImV4cCI6MjA5OTI2NTQyOX0.jxWDWn7l9KtREst0m2b9bWG8NLaE79IRGCt-dDL6QsE';
+
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const loginForm = document.getElementById('loginForm');
@@ -18,8 +19,6 @@ async function logAudit(userId, action, detailsObj) {
         user_id: userId,
         action: action,
         details: detailsObj,
-        // Note: Getting IP address via pure client-side JS requires a 3rd party API.
-        // We will leave it null here, or you can capture it in Postgres using default functions.
       }
     ]);
   } catch (error) {
@@ -36,7 +35,7 @@ function showError(message) {
 }
 
 loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault(); // Prevent page reload
+  e.preventDefault(); // Pipigilan nito ang pag-reload ng page at paglagay ng password sa URL
   
   errorDiv.style.display = 'none';
   loginBtn.textContent = 'Logging in...';
@@ -50,7 +49,7 @@ loginForm.addEventListener('submit', async (e) => {
     return;
   }
 
-  // 1. Authenticate with Supabase Auth
+  // 1. I-authenticate ang user sa Supabase Auth
   const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
     email: email,
     password: password
@@ -67,7 +66,7 @@ loginForm.addEventListener('submit', async (e) => {
 
   const user = authData.user;
 
-  // 2. Check if user exists in admin_profiles
+  // 2. I-check kung nage-exist ang user sa admin_profiles
   const { data: adminProfile, error: profileError } = await supabase
     .from('admin_profiles')
     .select('department, access_level')
@@ -75,13 +74,12 @@ loginForm.addEventListener('submit', async (e) => {
     .single();
 
   if (profileError || !adminProfile) {
-    // Valid Supabase user, but NOT an admin
+    // Kung registered user pero walang admin profile, i-kickout natin
     await logAudit(user.id, 'LOGIN_FAILED_UNAUTHORIZED', {
       email: email,
       reason: 'User exists but is not an Admin.'
     });
     
-    // Sign them out immediately since they aren't authorized
     await supabase.auth.signOut();
     showError("Unauthorized access. You do not have admin privileges.");
     return;
@@ -94,11 +92,10 @@ loginForm.addEventListener('submit', async (e) => {
     access_level: adminProfile.access_level
   });
 
-  // Store profile data in sessionStorage (similar to PHP $_SESSION)
-  // Note: Supabase automatically stores the access token securely.
+  // I-save ang detalye sa Session Storage
   sessionStorage.setItem('role', adminProfile.access_level);
   sessionStorage.setItem('division', adminProfile.department);
 
-  // Redirect to dashboard (Make sure dashboard is .html, not .php!)
-  window.location.href = '/sysad/dashboard.html'; 
+  // Redirect to dashboard (Lumabas muna ng admin folder para mapunta sa sysad)
+  window.location.href = '../sysad/dashboard.html'; 
 });
