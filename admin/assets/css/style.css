@@ -121,7 +121,9 @@ label {
   font-size: 14px;
 }
 
+/* Idinagdag dito ang input[type="email"] para maging pantay sila */
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   width: 100%;
   padding: 12px;
@@ -133,7 +135,9 @@ input[type="password"] {
   transition: border 0.3s, box-shadow 0.3s;
 }
 
+/* Idinagdag din dito ang input[type="email"]:focus para gumana rin ang glow effect */
 input[type="text"]:focus,
+input[type="email"]:focus,
 input[type="password"]:focus {
   border-color: #004080;
   box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
