@@ -61,28 +61,30 @@ loginForm.addEventListener('submit', async (e) => {
     password: password
   });
 
+  // KUNG SUMABLAY ANG AUTHENTICATION (Maling Password, o hindi pa confirmed ang Email)
   if (authError) {
     await logAudit(null, 'LOGIN_FAILED', {
       attempted_email: email,
       error_reason: authError.message
     });
-    showError("Unauthorized access. Check your email and password.");
+    // IPAPAKITA NATIN ANG TOTOONG REKLAMO NG SUPABASE PARA MADALING I-DEBUG
+    showError("Login Error: " + authError.message);
     return;
   }
 
   const user = authData.user;
 
-  // 2. I-check kung nage-exist ang user sa admin_profiles
+  // 2. I-check kung nage-exist ang user sa admin_profiles gamit ang TAMA at BAGONG Column Names
   const { data: adminProfile, error: profileError } = await supabase
     .from('admin_profiles')
-    .select('department, access_level')
-    .eq('id', user.id)
+    .select('department, admin_level') // TAMA: 'admin_level' na ang column sa bagong schema mo
+    .eq('user_id', user.id)            // TAMA: 'user_id' na ang katapat ng user.id ngayon
     .single();
 
   if (profileError || !adminProfile) {
     await logAudit(user.id, 'LOGIN_FAILED_UNAUTHORIZED', {
       email: email,
-      reason: 'User exists but is not an Admin.'
+      reason: 'User exists but has no Admin Profile.'
     });
     
     await supabase.auth.signOut();
@@ -94,25 +96,27 @@ loginForm.addEventListener('submit', async (e) => {
   await logAudit(user.id, 'LOGIN_SUCCESS', {
     message: 'Admin logged in successfully',
     email: email,
-    access_level: adminProfile.access_level
+    access_level: adminProfile.admin_level
   });
 
-  // I-save ang detalye sa Session Storage
-  sessionStorage.setItem('role', adminProfile.access_level);
+  // I-save ang detalye sa Session Storage gamit ang tamang columns
+  sessionStorage.setItem('role', adminProfile.admin_level);
   sessionStorage.setItem('division', adminProfile.department);
 
   // Redirect papuntang dashboard
   window.location.href = '../sysad/dashboard.html'; 
-}); // <-- Dito nagtatapos ang submit listener
-
-
-// ==========================================
-// HAKBANG 2: SHOW/HIDE PASSWORD (Nasa labas!)
-// ==========================================
-showPasswordCheckbox.addEventListener('change', function() {
-  if (this.checked) {
-    passwordInput.type = 'text'; // Ipapakita ang password
-  } else {
-    passwordInput.type = 'password'; // Itatago ulit ang password
-  }
 });
+
+
+// ==========================================
+// HAKBANG 2: SHOW/HIDE PASSWORD
+// ==========================================
+if (showPasswordCheckbox) {
+  showPasswordCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+      passwordInput.type = 'text'; // Ipapakita ang password
+    } else {
+      passwordInput.type = 'password'; // Itatago ulit ang password
+    }
+  });
+}
