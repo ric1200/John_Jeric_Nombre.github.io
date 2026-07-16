@@ -4,58 +4,52 @@
   <meta charset="UTF-8">
   <title>Add New User</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 
-  <!-- Sidebar Container -->
-  <div id="sidebar-container"></div>
-
   <div class="main-content">
-    <div class="container" style="max-width: 600px; margin-top: 50px;">
+    <div class="container" style="max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
       <h2>Add New System User</h2>
       <p>Create a new account for an Admin or Counselor.</p>
       <hr>
 
       <form id="addUserForm">
-        <!-- Role Selector -->
         <label for="role">User Role</label>
-        <select id="role" required>
+        <select id="role" required style="width: 100%; padding: 8px; margin-bottom: 15px;">
           <option value="" disabled selected>-- Select Role --</option>
           <option value="admin">Admin</option>
           <option value="counselor">Counselor</option>
         </select>
 
-        <!-- Common Fields -->
         <label for="email">Email Address</label>
-        <input type="email" id="email" required placeholder="user@ucl.edu.ph" />
+        <input type="email" id="email" required placeholder="user@ucl.edu.ph" style="width: 100%; padding: 8px; margin-bottom: 15px;" />
 
         <label for="password">Temporary Password</label>
-        <input type="password" id="password" required placeholder="At least 6 characters" />
+        <input type="password" id="password" required placeholder="At least 6 characters" style="width: 100%; padding: 8px; margin-bottom: 15px;" />
 
         <!-- Dynamic Fields for Admin only -->
         <div id="admin-fields" style="display: none;">
           <label for="department">Department</label>
-          <input type="text" id="department" placeholder="e.g., ECS, CBA, Guidance" />
+          <input type="text" id="department" placeholder="e.g., Guidance Office" style="width: 100%; padding: 8px; margin-bottom: 15px;" />
         </div>
 
         <!-- Dynamic Fields for Counselor only -->
         <div id="counselor-fields" style="display: none;">
           <label for="specialization">Specialization</label>
-          <input type="text" id="specialization" placeholder="e.g., Mental Health, Career" />
+          <input type="text" id="specialization" placeholder="e.g., Mental Health" style="width: 100%; padding: 8px; margin-bottom: 15px;" />
 
           <label for="office_location">Office Location</label>
-          <input type="text" id="office_location" placeholder="e.g., ECS-106" />
+          <input type="text" id="office_location" placeholder="e.g., ECS-106" style="width: 100%; padding: 8px; margin-bottom: 15px;" />
         </div>
 
-        <button type="submit" class="btn-primary" style="margin-top: 20px;">Register User</button>
+        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer;">Register User</button>
       </form>
       
       <div id="message" style="margin-top: 15px; font-weight: bold;"></div>
     </div>
   </div>
 
-  <!-- JavaScript Module -->
   <script type="module" src="../assets/js/add_user.js"></script>
 </body>
 </html>

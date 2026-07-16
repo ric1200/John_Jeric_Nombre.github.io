@@ -1,95 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+// Import the Supabase client from CDN
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+// Ang iyong totoong Supabase Project URL at ANON KEY
+const supabaseUrl = 'https://misuisycikabaafommxo.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pc3Vpc3ljaWthYmFhZm9tbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODk0MjksImV4cCI6MjA5OTI2NTQyOX0.jxWDWn7l9KtREst0m2b9bWG8NLaE79IRGCt-dDL6QsE';
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+const loginForm = document.getElementById('loginForm');
+const errorDiv = document.getElementById('error-message');
+const loginBtn = document.getElementById('loginBtn');
+
+// Helper function to log audit events
+async function logAudit(userId, action, detailsObj) {
+  try {
+    await supabase.from('audit_logs').insert([
+      {
+        user_id: userId,
+        action: action,
+        details: detailsObj,
+      }
+    ]);
+  } catch (error) {
+    console.error("Audit Log Error:", error);
+  }
+}
+
+// Function to display errors in the UI
+function showError(message) {
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+  loginBtn.textContent = 'Login';
+  loginBtn.disabled = false;
+}
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault(); // Pipigilan nito ang pag-reload ng page at paglagay ng password sa URL
   
-  <!-- CSS styled without PHP cache-busting time tag -->
-  <link rel="stylesheet" href="../assets/css/dashboard.css">
-  <style>
-    /* Prevent content layout shift while loading */
-    .loading-placeholder {
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-  </style>
-</head>
-<body>
-  
-  <!-- Container to dynamically pull in your sidebar -->
-  <div id="sidebar-container"></div>
-  
-  <div class="main-content">
-    <div class="container">
-        
-        <div class="header">
-          <h1>System Administrator Dashboard</h1>
-          <p>Welcome back, Administrator</p>
-        </div>
+  errorDiv.style.display = 'none';
+  loginBtn.textContent = 'Logging in...';
+  loginBtn.disabled = true;
 
-        <div class="dashboard-grid">
-          <div class="stat-card primary">
-            <div class="stat-content">
-                <h3 id="total-users" class="loading-placeholder">-</h3>
-                <p>Total Users</p>
-            </div>
-          </div>
+  const email = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
 
-          <div class="stat-card warning">
-            <div class="stat-content">
-                <h3 id="total-admins" class="loading-placeholder">-</h3>
-                <p>Admins</p>
-            </div>
-          </div>
+  if (!email || !password) {
+    showError("Please enter email and password.");
+    return;
+  }
 
-          <div class="stat-card success">
-            <div class="stat-content">
-                <h3 id="total-students" class="loading-placeholder">-</h3>
-                <p>Students</p>
-            </div>
-          </div>
-          
-          <div class="stat-card danger">
-            <div class="stat-content">
-                <h3 id="total-counselors" class="loading-placeholder">-</h3>
-                <p>Counselors</p>
-            </div>
-          </div>
-        </div>
+  // 1. I-authenticate ang user sa Supabase Auth
+  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
 
-        <div class="recent-activity">
-            <div class="header-row">
-                <h3>Recent System Activity</h3>
-                <a href="audit_logs.html" class="btn-secondary">View All Logs</a>
-            </div>
+  if (authError) {
+    await logAudit(null, 'LOGIN_FAILED', {
+      attempted_email: email,
+      error_reason: authError.message
+    });
+    showError("Unauthorized access. Check your email and password.");
+    return;
+  }
 
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>User</th>
-                            <th>Action</th>
-                            <th>Target</th>
-                        </tr>
-                    </thead>
-                    <tbody id="logs-tbody">
-                        <tr>
-                          <td colspan="4" style="text-align:center;">Loading logs...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  const user = authData.user;
 
-    </div>
-  </div>
+  // 2. I-check kung nage-exist ang user sa admin_profiles
+  const { data: adminProfile, error: profileError } = await supabase
+    .from('admin_profiles')
+    .select('department, access_level')
+    .eq('id', user.id)
+    .single();
 
-  <!-- Import the modern modules for auth guard and dynamic loading -->
-  <script type="module" src="../assets/js/dashboard.js"></script>
-</body>
-</html>
+  if (profileError || !adminProfile) {
+    // Kung registered user pero walang admin profile, i-kickout natin
+    await logAudit(user.id, 'LOGIN_FAILED_UNAUTHORIZED', {
+      email: email,
+      reason: 'User exists but is not an Admin.'
+    });
+    
+    await supabase.auth.signOut();
+    showError("Unauthorized access. You do not have admin privileges.");
+    return;
+  }
+
+  // 3. SUCCESSFUL LOGIN & AUTHORIZED ADMIN
+  await logAudit(user.id, 'LOGIN_SUCCESS', {
+    message: 'Admin logged in successfully',
+    email: email,
+    access_level: adminProfile.access_level
+  });
+
+  // I-save ang detalye sa Session Storage
+  sessionStorage.setItem('role', adminProfile.access_level);
+  sessionStorage.setItem('division', adminProfile.department);
+
+  // Bagong redirect path na gumagana sa parehong Localhost at GitHub Pages
+  window.location.href = '../sysad/dashboard.html'; 
+});
