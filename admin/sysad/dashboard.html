@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- CSS styled without PHP cache-busting time tag -->
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <style>
+    /* Prevent content layout shift while loading */
+    .loading-placeholder {
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Container to dynamically pull in your sidebar -->
+  <div id="sidebar-container"></div>
+  
+  <div class="main-content">
+    <div class="container">
+        
+        <div class="header">
+          <h1>System Administrator Dashboard</h1>
+          <p>Welcome back, Administrator</p>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="stat-card primary">
+            <div class="stat-content">
+                <h3 id="total-users" class="loading-placeholder">-</h3>
+                <p>Total Users</p>
+            </div>
+          </div>
+
+          <div class="stat-card warning">
+            <div class="stat-content">
+                <h3 id="total-admins" class="loading-placeholder">-</h3>
+                <p>Admins</p>
+            </div>
+          </div>
+
+          <div class="stat-card success">
+            <div class="stat-content">
+                <h3 id="total-students" class="loading-placeholder">-</h3>
+                <p>Students</p>
+            </div>
+          </div>
+          
+          <div class="stat-card danger">
+            <div class="stat-content">
+                <h3 id="total-counselors" class="loading-placeholder">-</h3>
+                <p>Counselors</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-activity">
+            <div class="header-row">
+                <h3>Recent System Activity</h3>
+                <a href="audit_logs.html" class="btn-secondary">View All Logs</a>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Target</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-tbody">
+                        <tr>
+                          <td colspan="4" style="text-align:center;">Loading logs...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+  </div>
+
+  <!-- Import the modern modules for auth guard and dynamic loading -->
+  <script type="module" src="../assets/js/dashboard.js"></script>
+</body>
+</html>
