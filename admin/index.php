@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <link rel="stylesheet" href="assets/css/style.css" />
+  
+  <style>
+    /* Dagdag na simpleng style para sa error message */
+    .error-msg {
+      background-color: #ffe6e6;
+      color: #d9534f;
+      border: 1px solid #d9534f;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 
@@ -29,8 +44,18 @@
         <h2>Welcome Back</h2>
         <p class="subtitle">Login to access your dashboard</p>
 
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required />
+        <!-- DITO LALABAS ANG ERROR MESSAGE MULA SA LOGIN PROCESS -->
+        <?php
+        if (isset($_SESSION['login_error'])) {
+            echo '<div class="error-msg">' . htmlspecialchars($_SESSION['login_error']) . '</div>';
+            // Tanggalin ang error sa session pagkatapos ipakita
+            unset($_SESSION['login_error']);
+        }
+        ?>
+
+        <!-- Pinalitan ang label at type bilang Email dahil Supabase Auth ang gamit -->
+        <label for="username">Email Address</label>
+        <input type="email" id="username" name="username" required />
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required />
