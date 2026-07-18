@@ -51,12 +51,13 @@ async function loadSidebar() {
   if (!container) return;
 
   try {
-    // Kinukuha ang hiwalay na sidebar.html file
-    const response = await fetch('../includes/sidebar.html');
+    // Nilagyan natin ng timestamp sa dulo para laging bagong file ang kunin ng browser
+    const cacheBuster = new Date().getTime();
+    const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
     
     if (response.ok) {
       container.innerHTML = await response.text();
-      setupSidebarLogic(); // Tatawagin lang ito kapag nai-load na ang HTML
+      setupSidebarLogic();
     } else {
       console.error("Failed to load sidebar. Check if ../includes/sidebar.html exists.");
     }
