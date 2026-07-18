@@ -1,12 +1,26 @@
-import { db } from './firebase-config.js'; // Siguraduhing tama ang path ng firebase config mo
-import { collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { db } from './firebase-config.js';
+// ==========================================================
+// 1. FIREBASE INITIALIZATION & IMPORTS
+// ==========================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
+  authDomain: "ricproject-bb8fc.firebaseapp.com",
+  projectId: "ricproject-bb8fc",
+  storageBucket: "ricproject-bb8fc.firebasestorage.app",
+  messagingSenderId: "1055032684339",
+  appId: "1:1055032684339:web:fea2712ffeee1008299846"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // Global States para sa Filtering at Pagination
 let allUsers = [];
 let filteredUsers = [];
 let currentPage = 1;
 const limit = 10;
-
 // ==========================================================
 // 1. AUTH GUARD LOGIC
 // ==========================================================
