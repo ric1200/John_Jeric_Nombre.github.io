@@ -1,9 +1,8 @@
 // ==========================================================
 // 1. FIREBASE INITIALIZATION & IMPORTS
 // ==========================================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, addDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, addDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
   authDomain: "ricproject-bb8fc.firebaseapp.com",
@@ -138,10 +137,10 @@ document.getElementById('userForm').addEventListener('submit', async (e) => {
       await logAudit("USER_UPDATE", `Updated user: ${userData.username}`);
       
     } else {
-      // INSERT NEW DOCUMENT
-      userData.status = 'ACTIVE'; // Default value pag bago
-      userData.created_at = serverTimestamp(); // Gayahin ang PHP auto-timestamp
-      
+    
+    // INSERT NEW DOCUMENT
+    userData.status = 'ACTIVE'; // Default value pag bago
+    userData.created_at = serverTimestamp(); // Gayahin ang PHP auto-timestamp
       const newDocRef = await addDoc(collection(db, "users"), userData);
       
       // Audit Log para sa Create
