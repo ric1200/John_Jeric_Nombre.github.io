@@ -81,7 +81,7 @@ async function fetchUsers() {
   try {
     const usersRef = collection(db, "users");
     // Naka-order sa pinakabago parang sa PHP script mo (created_at DESC)
-    const q = query(usersRef, orderBy("created_at", "desc"));
+    const q = query(usersRef);
     const querySnapshot = await getDocs(q);
     
     allUsers = [];
