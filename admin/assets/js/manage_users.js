@@ -2,7 +2,8 @@
 // 1. FIREBASE INITIALIZATION & IMPORTS
 // ==========================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
   authDomain: "ricproject-bb8fc.firebaseapp.com",
@@ -20,11 +21,11 @@ let allUsers = [];
 let filteredUsers = [];
 let currentPage = 1;
 const limit = 10;
+
 // ==========================================================
-// 1. AUTH GUARD LOGIC
+// 2. AUTH GUARD LOGIC
 // ==========================================================
 function checkAuth() {
-  // Bypassed pansamantala tulad ng ginawa natin sa dashboard para makapasok ka
   const userRole = sessionStorage.getItem('role') || 'ADMIN'; 
   if (!userRole) {
     window.location.href = '../login.html';
@@ -32,54 +33,49 @@ function checkAuth() {
 }
 
 // ==========================================================
-// 2. SIDEBAR LOADER & LOGIC (May Cache Buster)
+// 3. SIDEBAR LOADER & LOGIC
 // ==========================================================
 async function loadSidebar() {
-    const container = document.getElementById('sidebar-container');
-    if (!container) return;
-    try {
-      const cacheBuster = new Date().getTime();
-      const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
-      if (response.ok) {
-        container.innerHTML = await response.text();
-        setupSidebarLogic(); // <--- TATAWAGIN NATIN ITO PARA GUMANA ANG LOGOUT
-      }
-    } catch (err) {
-      console.error("Error loading sidebar:", err);
+  const container = document.getElementById('sidebar-container');
+  if (!container) return;
+  try {
+    const cacheBuster = new Date().getTime();
+    const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
+    if (response.ok) {
+      container.innerHTML = await response.text();
+      setupSidebarLogic();
     }
+  } catch (err) {
+    console.error("Error loading sidebar:", err);
   }
+}
   
-  function setupSidebarLogic() {
-    // Setup Logout Button
-    const logoutBtn = document.getElementById('logout-btn'); 
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Dahil hindi natin in-import ang 'signOut' sa file na ito, 
-        // linisin na lang natin ang session at ibalik sa login page
-        sessionStorage.clear();
-        window.location.href = '../index.html';
-      });
-    }
-  
-    // Highlight Active Link
-    const currentPath = window.location.pathname;
-    const links = document.querySelectorAll('.sidebar a');
-    links.forEach(link => {
-      // I-check kung ang link ay nagma-match sa kasalukuyang URL
-      if (link.getAttribute('href') && currentPath.includes(link.getAttribute('href').replace('..', ''))) {
-        link.classList.add('active');
-      }
+function setupSidebarLogic() {
+  const logoutBtn = document.getElementById('logout-btn'); 
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      sessionStorage.clear();
+      window.location.href = '../index.html';
     });
   }
+
+  const currentPath = window.location.pathname;
+  const links = document.querySelectorAll('.sidebar a');
+  links.forEach(link => {
+    if (link.getAttribute('href') && currentPath.includes(link.getAttribute('href').replace('..', ''))) {
+      link.classList.add('active');
+    }
+  });
+}
+
 // ==========================================================
-// 3. FETCH DATA FROM FIRESTORE
+// 4. FETCH DATA FROM FIRESTORE
 // ==========================================================
 async function fetchUsers() {
   const tbody = document.getElementById('usersTableBody');
   try {
     const usersRef = collection(db, "users");
-    // Naka-order sa pinakabago parang sa PHP script mo (created_at DESC)
     const q = query(usersRef);
     const querySnapshot = await getDocs(q);
     
@@ -91,7 +87,6 @@ async function fetchUsers() {
       });
     });
 
-    // Sa unang load, ipantay ang filtered sa lahat ng users
     filteredUsers = [...allUsers];
     renderTable();
 
@@ -108,7 +103,7 @@ async function fetchUsers() {
 }
 
 // ==========================================================
-// 4. FILTER & SEARCH LOGIC (Dating PHP where clauses)
+// 5. FILTER & SEARCH LOGIC
 // ==========================================================
 window.handleFilters = function() {
   const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -116,9 +111,7 @@ window.handleFilters = function() {
   const selectedDivision = document.getElementById('divisionFilter').value;
   const resetContainer = document.getElementById('resetButtonContainer');
 
-  // I-filter ang global array gamit ang client-side logic
   filteredUsers = allUsers.filter(user => {
-    // 1. Text Search Condition (Matches first_name, last_name, email, or username)
     const fullName = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase();
     const email = (user.email || '').toLowerCase();
     const username = (user.username || '').toLowerCase();
@@ -128,23 +121,19 @@ window.handleFilters = function() {
       email.includes(searchText) || 
       username.includes(searchText);
 
-    // 2. Role Dropdown Condition
     const matchesRole = !selectedRole || user.role === selectedRole;
-
-    // 3. Division Dropdown Condition
     const matchesDivision = !selectedDivision || user.division === selectedDivision;
 
     return matchesSearch && matchesRole && matchesDivision;
   });
 
-  // Ipakita o itago ang Reset Button gaya ng PHP script mo
   if (searchText || selectedRole || selectedDivision) {
     resetContainer.innerHTML = `<button type="button" class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-undo"></i> Reset</button>`;
   } else {
     resetContainer.innerHTML = '';
   }
 
-  currentPage = 1; // Ibalik sa page 1 matapos mag-filter
+  currentPage = 1;
   renderTable();
 }
 
@@ -157,7 +146,7 @@ window.resetFilters = function() {
 }
 
 // ==========================================================
-// 5. RENDER TABLE & PAGINATION (Dating HTML/PHP loops)
+// 6. RENDER TABLE & PAGINATION
 // ==========================================================
 function renderTable() {
   const tbody = document.getElementById('usersTableBody');
@@ -175,12 +164,10 @@ function renderTable() {
     return;
   }
 
-  // Pag-calculate ng Index para sa Pagination (LIMIT & OFFSET)
   const offset = (currentPage - 1) * limit;
   const paginatedItems = filteredUsers.slice(offset, offset + limit);
   const totalPages = Math.ceil(filteredUsers.length / limit);
 
-  // Pag-append ng mga Rows sa Table
   paginatedItems.forEach(user => {
     const tr = document.createElement('tr');
     if (user.status === 'INACTIVE') {
@@ -192,11 +179,14 @@ function renderTable() {
       ? `<span class="badge badge-success"><i class="fas fa-check-circle"></i> Active</span>`
       : `<span class="badge badge-danger"><i class="fas fa-times-circle"></i> Inactive</span>`;
 
-    const deactivateButton = user.status === 'ACTIVE'
+    // Dynamic Button (Activate or Deactivate)
+    const statusActionBtn = user.status === 'ACTIVE'
       ? `<button class="action-btn btn-delete" onclick="deactivateUser('${user.id}')" title="Deactivate">
             <i class="fas fa-ban"></i> Deactivate
          </button>`
-      : '';
+      : `<button class="action-btn" onclick="activateUser('${user.id}')" title="Activate" style="background-color: #2eb85c; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">
+            <i class="fas fa-check-circle"></i> Activate
+         </button>`;
 
     tr.innerHTML = `
       <td class="id-column">#${user.user_id || user.id.slice(0,5)}</td>
@@ -214,7 +204,7 @@ function renderTable() {
         <a href="user_form.html?id=${user.id}" class="action-btn btn-edit" title="Edit User">
           <i class="fas fa-edit"></i> Edit
         </a>
-        ${deactivateButton}
+        ${statusActionBtn}
       </td>
     `;
     tbody.appendChild(tr);
@@ -248,7 +238,7 @@ window.changePage = function(pageNumber) {
 }
 
 // ==========================================================
-// 6. DEACTIVATE USER FUNCTION (Dating delete_user.php)
+// 7. DEACTIVATE / ACTIVATE USER FUNCTIONS
 // ==========================================================
 window.deactivateUser = async function(docId) {
   if (confirm('Are you sure you want to deactivate this user?')) {
@@ -259,13 +249,31 @@ window.deactivateUser = async function(docId) {
       });
       alert("User successfully deactivated!");
       
-      // I-update ang local data arrays para mag-reflect agad sa screen nang hindi nagre-reload ang page
       allUsers = allUsers.map(user => user.id === docId ? { ...user, status: "INACTIVE" } : user);
       handleFilters(); 
       
     } catch (error) {
       console.error("Error deactivating user:", error);
       alert("Failed to deactivate user: " + error.message);
+    }
+  }
+}
+
+window.activateUser = async function(docId) {
+  if (confirm('Are you sure you want to activate this user?')) {
+    try {
+      const userDocRef = doc(db, "users", docId);
+      await updateDoc(userDocRef, {
+        status: "ACTIVE"
+      });
+      alert("User successfully activated!");
+      
+      allUsers = allUsers.map(user => user.id === docId ? { ...user, status: "ACTIVE" } : user);
+      handleFilters(); 
+      
+    } catch (error) {
+      console.error("Error activating user:", error);
+      alert("Failed to activate user: " + error.message);
     }
   }
 }
