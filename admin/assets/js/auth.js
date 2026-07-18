@@ -1,122 +1,99 @@
-// Import the Supabase client from CDN
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+// 1. I-import ang mga kinakailangang Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-// Naka-hardcode na ang tamang credentials mo para mabasa ng GitHub Pages
-const supabaseUrl = 'https://misuisycikabaafommxo.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pc3Vpc3ljaWthYmFhZm9tbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODk0MjksImV4cCI6MjA5OTI2NTQyOX0.jxWDWn7l9KtREst0m2b9bWG8NLaE79IRGCt-dDL6QsE';
+// 2. Ang iyong Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
+  authDomain: "ricproject-bb8fc.firebaseapp.com",
+  projectId: "ricproject-bb8fc",
+  storageBucket: "ricproject-bb8fc.firebasestorage.app",
+  messagingSenderId: "1055032684339",
+  appId: "1:1055032684339:web:fea2712ffeee1008299846"
+};
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// 3. I-initialize ang Firebase, Auth, at Database
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Kunin ang mga HTML Elements
+// 4. Kunin ang mga elements mula sa HTML
 const loginForm = document.getElementById('loginForm');
-const errorDiv = document.getElementById('error-message');
-const loginBtn = document.getElementById('loginBtn');
+const emailInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
+const errorMessage = document.getElementById('error-message');
+const loginBtn = document.getElementById('loginBtn');
 const showPasswordCheckbox = document.getElementById('showPassword');
 
-// Helper function to log audit events
-async function logAudit(userId, action, detailsObj) {
-  try {
-    await supabase.from('audit_logs').insert([
-      {
-        user_id: userId,
-        action: action,
-        details: detailsObj,
-      }
-    ]);
-  } catch (error) {
-    console.error("Audit Log Error:", error);
-  }
-}
-
-// Function to display errors in the UI
-function showError(message) {
-  errorDiv.textContent = message;
-  errorDiv.style.display = 'block';
-  loginBtn.textContent = 'Login';
-  loginBtn.disabled = false;
-}
-
-// ==========================================
-// HAKBANG 1: LOGIN FORM SUBMISSION
-// ==========================================
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault(); // Pigilan ang pag-refresh ng page
-  
-  errorDiv.style.display = 'none';
-  loginBtn.textContent = 'Logging in...';
-  loginBtn.disabled = true;
-
-  const email = document.getElementById('username').value.trim();
-  const password = passwordInput.value;
-
-  if (!email || !password) {
-    showError("Please enter email and password.");
-    return;
-  }
-
-  // 1. I-authenticate ang user sa Supabase Auth
-  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
-
-  // KUNG SUMABLAY ANG AUTHENTICATION (Maling Password, o hindi pa confirmed ang Email)
-  if (authError) {
-    await logAudit(null, 'LOGIN_FAILED', {
-      attempted_email: email,
-      error_reason: authError.message
-    });
-    // IPAPAKITA NATIN ANG TOTOONG REKLAMO NG SUPABASE PARA MADALING I-DEBUG
-    showError("Login Error: " + authError.message);
-    return;
-  }
-
-  const user = authData.user;
-
-  // 2. I-check kung nage-exist ang user sa admin_profiles gamit ang TAMA at BAGONG Column Names
-  const { data: adminProfile, error: profileError } = await supabase
-    .from('admin_profiles')
-    .select('department, admin_level') // TAMA: 'admin_level' na ang column sa bagong schema mo
-    .eq('user_id', user.id)            // TAMA: 'user_id' na ang katapat ng user.id ngayon
-    .single();
-
-  if (profileError || !adminProfile) {
-    await logAudit(user.id, 'LOGIN_FAILED_UNAUTHORIZED', {
-      email: email,
-      reason: 'User exists but has no Admin Profile.'
-    });
-    
-    await supabase.auth.signOut();
-    showError("Unauthorized access. You do not have admin privileges.");
-    return;
-  }
-
-  // 3. SUCCESSFUL LOGIN
-  await logAudit(user.id, 'LOGIN_SUCCESS', {
-    message: 'Admin logged in successfully',
-    email: email,
-    access_level: adminProfile.admin_level
-  });
-
-  // I-save ang detalye sa Session Storage gamit ang tamang columns
-  sessionStorage.setItem('role', adminProfile.admin_level);
-  sessionStorage.setItem('division', adminProfile.department);
-
-  // Redirect papuntang dashboard
-  window.location.href = '../sysad/dashboard.html'; 
+// 5. Logic para sa "Show Password" checkbox
+showPasswordCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        passwordInput.type = 'text';
+    } else {
+        passwordInput.type = 'password';
+    }
 });
 
+// 6. Logic kapag pinindot ang "Login" button
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Pigilan ang pag-refresh ng page
+    
+    const email = emailInput.value;
+    const password = passwordInput.value;
 
-// ==========================================
-// HAKBANG 2: SHOW/HIDE PASSWORD
-// ==========================================
-if (showPasswordCheckbox) {
-  showPasswordCheckbox.addEventListener('change', function() {
-    if (this.checked) {
-      passwordInput.type = 'text'; // Ipapakita ang password
-    } else {
-      passwordInput.type = 'password'; // Itatago ulit ang password
+    // Itago muna ang error message at palitan ang text ng button
+    errorMessage.style.display = 'none';
+    loginBtn.innerText = "Logging in...";
+    loginBtn.disabled = true;
+
+    try {
+        // Step A: Mag-login sa Firebase Authentication
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Step B: Kunin ang data ng user sa Firestore para malaman ang Role
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            const role = userData.role;
+
+            // Kapag successful ang login:
+            errorMessage.style.display = 'block';
+            errorMessage.style.backgroundColor = '#d4edda';
+            errorMessage.style.color = '#155724';
+            errorMessage.style.borderColor = '#c3e6cb';
+            errorMessage.innerText = `Login successful! Redirecting ${role}...`;
+
+            // Step C: I-redirect ang user sa Dashboard (PALITAN MO ANG URL NA ITO)
+            setTimeout(() => {
+                // Halimbawa: window.location.href = "sysad/dashboard.html";
+                // Ilagay dito ang tamang file path ng dashboard mo:
+                window.location.href = "dashboard.html"; 
+            }, 1500);
+
+        } else {
+            throw new Error("User data not found in database.");
+        }
+
+    } catch (error) {
+        // Kapag may mali sa email o password
+        console.error("Login Error:", error);
+        errorMessage.style.display = 'block';
+        errorMessage.style.backgroundColor = '#ffe6e6';
+        errorMessage.style.color = '#d9534f';
+        errorMessage.style.borderColor = '#d9534f';
+        
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            errorMessage.innerText = "Login Error: Invalid email or password.";
+        } else {
+            errorMessage.innerText = `Error: ${error.message}`;
+        }
+    } finally {
+        // Ibalik sa normal ang button kahit nagka-error
+        loginBtn.innerText = "Login";
+        loginBtn.disabled = false;
     }
-  });
-}
+});
