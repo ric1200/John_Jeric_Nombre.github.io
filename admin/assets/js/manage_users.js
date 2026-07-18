@@ -33,23 +33,46 @@ function checkAuth() {
 }
 
 // ==========================================================
-// 2. SIDEBAR LOADER (May Cache Buster)
+// 2. SIDEBAR LOADER & LOGIC (May Cache Buster)
 // ==========================================================
 async function loadSidebar() {
-  const container = document.getElementById('sidebar-container');
-  if (!container) return;
-  try {
-    const cacheBuster = new Date().getTime();
-    const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
-    if (response.ok) {
-      container.innerHTML = await response.text();
-      // Maaari mong idagdag dito ang click event ng logout button kung kinakailangan
+    const container = document.getElementById('sidebar-container');
+    if (!container) return;
+    try {
+      const cacheBuster = new Date().getTime();
+      const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
+      if (response.ok) {
+        container.innerHTML = await response.text();
+        setupSidebarLogic(); // <--- TATAWAGIN NATIN ITO PARA GUMANA ANG LOGOUT
+      }
+    } catch (err) {
+      console.error("Error loading sidebar:", err);
     }
-  } catch (err) {
-    console.error("Error loading sidebar:", err);
   }
-}
-
+  
+  function setupSidebarLogic() {
+    // Setup Logout Button
+    const logoutBtn = document.getElementById('logout-btn'); 
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Dahil hindi natin in-import ang 'signOut' sa file na ito, 
+        // linisin na lang natin ang session at ibalik sa login page
+        sessionStorage.clear();
+        window.location.href = '../index.html';
+      });
+    }
+  
+    // Highlight Active Link
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+      // I-check kung ang link ay nagma-match sa kasalukuyang URL
+      if (link.getAttribute('href') && currentPath.includes(link.getAttribute('href').replace('..', ''))) {
+        link.classList.add('active');
+      }
+    });
+  }
 // ==========================================================
 // 3. FETCH DATA FROM FIRESTORE
 // ==========================================================
