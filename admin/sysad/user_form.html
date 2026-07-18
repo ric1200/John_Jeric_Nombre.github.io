@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title id="page-title">User Form | Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="../assets/css/user_form.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Dito papasok ang Sidebar -->
+<div id="sidebar-container"></div>
+
+<div class="main-content">
+    <div class="container form-container">
+        
+        <div class="page-header">
+            <a href="manage_users.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Users</a>
+            <h1 id="form-header-title">Loading...</h1>
+            <p id="form-header-desc">Please wait while we set up the form.</p>
+        </div>
+
+        <!-- Error / Success Message Container -->
+        <div id="message-container" style="display: none;" class="alert"></div>
+
+        <div class="form-card">
+            <form id="userForm">
+                <h3 class="section-title"><i class="far fa-id-card"></i> Personal Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name <span class="required">*</span></label>
+                        <input type="text" id="first_name" required placeholder="e.g. Juan">
+                    </div>
+                    <div class="form-group">
+                        <label>Middle Name</label>
+                        <input type="text" id="middle_name" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name <span class="required">*</span></label>
+                        <input type="text" id="last_name" required placeholder="e.g. Dela Cruz">
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <h3 class="section-title"><i class="fas fa-shield-alt"></i> Account Details</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" required placeholder="user.ucl@phinmaed.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Username <span class="required">*</span></label>
+                        <input type="text" id="username" required placeholder="Choose a unique username">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>System Role <span class="required">*</span></label>
+                        <select id="role" required>
+                            <option value="ADMIN">Admin</option>
+                            <option value="COUNSELOR">Counselor</option>
+                            <option value="STUDENT">Student</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Division <span class="required">*</span></label>
+                        <select id="division" required>
+                            <option value="ADMIN">System Admin</option>
+                            <option value="COUNSELOR">Counselor</option>
+                            <option value="STUDENT">Student</option>
+                            <option value="REPORT">Report</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Nakatago by default. Lalabas lang ito kapag nag-e-edit ng lumang user -->
+                <div class="form-group status-group" id="status-group" style="display: none;">
+                    <label>Account Status</label>
+                    <select id="status">
+                        <option value="ACTIVE">Active (Can Login)</option>
+                        <option value="INACTIVE">Inactive (Disabled)</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <a href="manage_users.html" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        <i class="fas fa-save"></i> <span id="submit-btn-text">Save User</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+
+<!-- JS Logic for the Form -->
+<script type="module" src="../assets/js/user_form.js"></script>
+</body>
+</html>
