@@ -19,7 +19,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ==========================================================
-// 2. CLIENT-SIDE AUTH GUARD
+// 2. CLIENT-SIDE AUTH GUARDsda
 // ==========================================================
 function checkAuth() {
   return new Promise((resolve) => {
