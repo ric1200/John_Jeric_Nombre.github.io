@@ -1,7 +1,7 @@
-// 1. I-import ang mga kinakailangang Firebase modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+// 1. I-import ang mga kinakailangang Firebase modules (Pinalitan ng v10.8.0 at dinagdag ang signOut)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // 2. Ang iyong Firebase Configuration
 const firebaseConfig = {
@@ -28,72 +28,80 @@ const showPasswordCheckbox = document.getElementById('showPassword');
 
 // 5. Logic para sa "Show Password" checkbox
 showPasswordCheckbox.addEventListener('change', function() {
-    if (this.checked) {
-        passwordInput.type = 'text';
-    } else {
-        passwordInput.type = 'password';
-    }
+  if (this.checked) {
+      passwordInput.type = 'text';
+  } else {
+      passwordInput.type = 'password';
+  }
 });
 
 // 6. Logic kapag pinindot ang "Login" button
 loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Pigilan ang pag-refresh ng page
-    
-    const email = emailInput.value;
-    const password = passwordInput.value;
+  e.preventDefault(); // Pigilan ang pag-refresh ng page
+  
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
-    // Itago muna ang error message at palitan ang text ng button
-    errorMessage.style.display = 'none';
-    loginBtn.innerText = "Logging in...";
-    loginBtn.disabled = true;
+  // Itago muna ang error message at palitan ang text ng button
+  errorMessage.style.display = 'none';
+  loginBtn.innerText = "Logging in...";
+  loginBtn.disabled = true;
 
-    try {
-        // Step A: Mag-login sa Firebase Authentication
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+  try {
+      // Step A: Mag-login sa Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-        // Step B: Kunin ang data ng user sa Firestore para malaman ang Role
-        const userDocRef = doc(db, "users", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
+      // Step B: Kunin ang data ng user sa Firestore para malaman ang Role
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
 
-        if (userDocSnap.exists()) {
-            const userData = userDocSnap.data();
-            const role = userData.role;
+      if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
 
-            // Kapag successful ang login:
-            errorMessage.style.display = 'block';
-            errorMessage.style.backgroundColor = '#d4edda';
-            errorMessage.style.color = '#155724';
-            errorMessage.style.borderColor = '#c3e6cb';
-            errorMessage.innerText = `Login successful! Redirecting ${role}...`;
+          // 👇 ITO ANG BAGONG HARANG PARA SA MGA INACTIVE USERS 👇
+          if (userData.status === 'INACTIVE') {
+              await signOut(auth); // I-logout agad sa background para walang matirang session
+              throw new Error("deactivated-account"); // Ipasa sa catch block sa ibaba ang error
+          }
 
-            // Step C: I-redirect ang user sa Dashboard (PALITAN MO ANG URL NA ITO)
-            setTimeout(() => {
-                // Halimbawa: window.location.href = "sysad/dashboard.html";
-                // Ilagay dito ang tamang file path ng dashboard mo:
-                window.location.href = "sysad/dashboard.html"; 
-            }, 1500);
+          const role = userData.role;
 
-        } else {
-            throw new Error("User data not found in database.");
-        }
+          // Kapag successful ang login at ACTIVE ang user:
+          errorMessage.style.display = 'block';
+          errorMessage.style.backgroundColor = '#d4edda';
+          errorMessage.style.color = '#155724';
+          errorMessage.style.borderColor = '#c3e6cb';
+          errorMessage.innerText = `Login successful! Redirecting ${role}...`;
 
-    } catch (error) {
-        // Kapag may mali sa email o password
-        console.error("Login Error:", error);
-        errorMessage.style.display = 'block';
-        errorMessage.style.backgroundColor = '#ffe6e6';
-        errorMessage.style.color = '#d9534f';
-        errorMessage.style.borderColor = '#d9534f';
-        
-        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-            errorMessage.innerText = "Login Error: Invalid email or password.";
-        } else {
-            errorMessage.innerText = `Error: ${error.message}`;
-        }
-    } finally {
-        // Ibalik sa normal ang button kahit nagka-error
-        loginBtn.innerText = "Login";
-        loginBtn.disabled = false;
-    }
+          // Step C: I-redirect ang user sa Dashboard
+          setTimeout(() => {
+              window.location.href = "sysad/dashboard.html"; 
+          }, 1500);
+
+      } else {
+          throw new Error("User data not found in database.");
+      }
+
+  } catch (error) {
+      // Kapag may mali sa email, password, O kapag inactive ang account
+      console.error("Login Error:", error);
+      errorMessage.style.display = 'block';
+      errorMessage.style.backgroundColor = '#ffe6e6';
+      errorMessage.style.color = '#d9534f';
+      errorMessage.style.borderColor = '#d9534f';
+      
+      // Ipakita ang tamang error message depende sa nangyari
+      if (error.message === 'deactivated-account') {
+          errorMessage.innerText = "Login Error: Your account has been deactivated. Please contact the administrator.";
+      } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMessage.innerText = "Login Error: Invalid email or password.";
+      } else {
+          errorMessage.innerText = `Error: ${error.message}`;
+      }
+  } finally {
+      // Ibalik sa normal ang button kahit nagka-error
+      loginBtn.innerText = "Login";
+      loginBtn.disabled = false;
+  }
 });
