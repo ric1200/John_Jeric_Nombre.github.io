@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users | Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="../assets/css/manage_users.css">
+    <link rel="stylesheet" href="../includes/sidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Dito mai-inject ang sidebar.html -->
+<div id="sidebar-container"></div>
+
+<div class="main-content">
+    <div class="container">
+        
+        <div class="page-header">
+            <h1>Manage Users</h1>
+            <p>View, search, filter, and manage system accounts.</p>
+        </div>
+
+        <div class="data-card">
+            <div class="top-controls">
+                <!-- Pinalitan ng Form na pinatatakbo ng JS event -->
+                <form id="filterForm" class="search-form" onsubmit="event.preventDefault(); handleFilters();">
+                    
+                    <div class="search-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" class="search-input search-text" 
+                               placeholder="Search name, email, or username...">
+                    </div>
+
+                    <select id="roleFilter" class="search-input select-filter" onchange="handleFilters()">
+                        <option value="">All Roles</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Student">Student</option>
+                        <option value="Counselor">Counselor</option>
+                    </select>
+
+                    <select id="divisionFilter" class="search-input select-filter" onchange="handleFilters()">
+                        <option value="">All Divisions</option>
+                        <option value="admin">System Admin</option>
+                        <option value="counselor">Counselor</option>
+                        <option value="student">Student</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-search"><i class="fas fa-filter"></i> Filter</button>
+                    
+                    <!-- Dynamic Reset Button Container -->
+                    <span id="resetButtonContainer"></span>
+                </form>
+
+                <a href="user_form.html" class="btn btn-add"><i class="fas fa-plus"></i> Add New User</a>
+            </div>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Role / Division</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </table>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Dito dynamic na papasok ang mga rows ng users via JS -->
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fas fa-spinner fa-spin"></i><br>
+                                Loading users...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Container -->
+            <div id="paginationContainer" class="pagination"></div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK at Custom JS Logic -->
+<script type="module" src="../assets/js/manage_users.js"></script>
+
+</body>
+</html>
