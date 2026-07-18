@@ -1,70 +1,85 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+// ==========================================================
+// 1. FIREBASE INITIALIZATION & IMPORTS
+// ==========================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getFirestore, collection, query, where, getCountFromServer, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-// Replace these with your actual Supabase project URL and ANON KEY
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const firebaseConfig = {
+  apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
+  authDomain: "ricproject-bb8fc.firebaseapp.com",
+  projectId: "ricproject-bb8fc",
+  storageBucket: "ricproject-bb8fc.firebasestorage.app",
+  messagingSenderId: "1055032684339",
+  appId: "1:1055032684339:web:fea2712ffeee1008299846"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // ==========================================================
-// 1. CLIENT-SIDE AUTH GUARD (Replaces auth_guard.php)
+// 2. CLIENT-SIDE AUTH GUARD
 // ==========================================================
-async function checkAuth() {
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  // If user is not logged in, boot them to index.html
-  if (!session) {
-    window.location.href = '../index.html';
-    return null;
-  }
-
-  // Double check authorization role from login's sessionStorage
-  const role = sessionStorage.getItem('role');
-  if (role !== 'SUPER_ADMIN' && role !== 'ADMIN') {
-    alert("Unauthorized access.");
-    window.location.href = '../index.html';
-    return null;
-  }
-
-  return session.user;
+function checkAuth() {
+  return new Promise((resolve) => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = '../index.html';
+        resolve(null);
+      } else {
+        const role = sessionStorage.getItem('role');
+        if (role !== 'SUPER_ADMIN' && role !== 'ADMIN') {
+          alert("Unauthorized access.");
+          signOut(auth).then(() => {
+            window.location.href = '../index.html';
+          });
+          resolve(null);
+        } else {
+          resolve(user);
+        }
+      }
+    });
+  });
 }
 
 // ==========================================================
-// 2. DYNAMIC SIDEBAR LOAD (Replaces include 'sidebar.php')
+// 3. DYNAMIC SIDEBAR LOAD & LOGIC
 // ==========================================================
 async function loadSidebar() {
   const container = document.getElementById('sidebar-container');
   if (!container) return;
 
   try {
+    // Kinukuha ang hiwalay na sidebar.html file
     const response = await fetch('../includes/sidebar.html');
+    
     if (response.ok) {
       container.innerHTML = await response.text();
-      setupLogoutButton();
-      highlightActiveSidebarLink();
+      setupSidebarLogic(); // Tatawagin lang ito kapag nai-load na ang HTML
     } else {
-      console.error("Failed to load sidebar structure.");
+      console.error("Failed to load sidebar. Check if ../includes/sidebar.html exists.");
     }
   } catch (err) {
     console.error("Error drawing sidebar component:", err);
   }
 }
 
-function setupLogoutButton() {
-  const logoutBtn = document.getElementById('logout-btn'); // Ensure your sidebar.html element uses this ID
+function setupSidebarLogic() {
+  // Setup Logout Button
+  const logoutBtn = document.getElementById('logout-btn'); 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async (e) => {
       e.preventDefault();
-      await supabase.auth.signOut();
+      await signOut(auth);
       sessionStorage.clear();
       window.location.href = '../index.html';
     });
   }
-}
 
-function highlightActiveSidebarLink() {
-  // Finds links in your sidebar matching current URL pathname and adds 'active' class
+  // Highlight Active Link
   const currentPath = window.location.pathname;
-  const links = document.querySelectorAll('#sidebar-container a');
+  const links = document.querySelectorAll('.sidebar a');
   links.forEach(link => {
     if (link.getAttribute('href') && currentPath.includes(link.getAttribute('href').replace('..', ''))) {
       link.classList.add('active');
@@ -73,32 +88,23 @@ function highlightActiveSidebarLink() {
 }
 
 // ==========================================================
-// 3. FETCH METRICS (Replaces PHP SELECT COUNT Queries)
+// 4. FETCH METRICS
 // ==========================================================
 async function fetchDashboardStats() {
   try {
-    // Queries counts concurrently in parallel for optimized load times
-    const [
-      { count: totalUsers, error: errTotal },
-      { count: totalAdmins, error: errAdmins },
-      { count: totalStudents, error: errStudents },
-      { count: totalCounselors, error: errCounselors }
-    ] = await Promise.all([
-      supabase.from('users').select('*', { count: 'exact', head: true }),
-      supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'ADMIN'),
-      supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'STUDENT'),
-      supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'COUNSELOR')
+    const usersRef = collection(db, "users");
+
+    const [totalUsersSnap, adminsSnap, studentsSnap, counselorsSnap] = await Promise.all([
+      getCountFromServer(usersRef),
+      getCountFromServer(query(usersRef, where("role", "==", "ADMIN"))),
+      getCountFromServer(query(usersRef, where("role", "==", "STUDENT"))),
+      getCountFromServer(query(usersRef, where("role", "==", "COUNSELOR")))
     ]);
 
-    if (errTotal || errAdmins || errStudents || errCounselors) {
-      throw new Error("Query fetch failed on table: users");
-    }
-
-    // Populate elements and remove placeholder skeleton animation classes
-    updateStatElement('total-users', totalUsers);
-    updateStatElement('total-admins', totalAdmins);
-    updateStatElement('total-students', totalStudents);
-    updateStatElement('total-counselors', totalCounselors);
+    updateStatElement('total-users', totalUsersSnap.data().count);
+    updateStatElement('total-admins', adminsSnap.data().count);
+    updateStatElement('total-students', studentsSnap.data().count);
+    updateStatElement('total-counselors', counselorsSnap.data().count);
 
   } catch (err) {
     console.error("Database Count Fetch Error:", err);
@@ -114,62 +120,44 @@ function updateStatElement(id, value) {
 }
 
 // ==========================================================
-// 4. RECENT SYSTEM ACTIVITY (Replaces Join SQL & Table Render)
+// 5. RECENT SYSTEM ACTIVITY
 // ==========================================================
 async function fetchRecentLogs() {
   const tbody = document.getElementById('logs-tbody');
   
   try {
-    // Queries audit logs and matches profile username details via Foreign Keys inside Postgres.
-    // Ensure audit_logs.user_id points to users.user_id (or profile table) via a foreign key relation.
-    const { data: logs, error } = await supabase
-      .from('audit_logs')
-      .select(`
-        created_at,
-        action,
-        table_name,
-        object_id,
-        users (
-          username
-        )
-      `)
-      .order('created_at', { ascending: false })
-      .limit(5);
+    const logsQuery = query(collection(db, "audit_logs"), orderBy("timestamp", "desc"), limit(5));
+    const logsSnap = await getDocs(logsQuery);
 
-    if (error) throw error;
-
-    if (!logs || logs.length === 0) {
+    if (logsSnap.empty) {
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No recent activity.</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = ''; // Clear local placeholder loaders
+    tbody.innerHTML = '';
 
-    logs.forEach(log => {
-      // Clean formatted date string logic: "Jul 16, 18:59"
-      const dateStr = new Date(log.created_at).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
+    logsSnap.forEach(docSnap => {
+      const log = docSnap.data();
+      
+      const dateObj = log.timestamp ? log.timestamp.toDate() : new Date();
+      const dateStr = dateObj.toLocaleString('en-US', {
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
       });
 
-      // Map action rules to CSS styling badges
       let badgeClass = 'badge-info';
-      if (log.action.includes('DELETE')) badgeClass = 'badge-danger';
-      else if (log.action.includes('CREATE')) badgeClass = 'badge-success';
+      if (log.action && log.action.includes('DELETE')) badgeClass = 'badge-danger';
+      else if (log.action && (log.action.includes('CREATE') || log.action.includes('SUCCESS'))) badgeClass = 'badge-success';
 
-      const username = log.users?.username || 'System';
-      const tableName = log.table_name || 'System Event';
-      const objectId = log.object_id ? ` (ID: ${log.object_id})` : '';
+      const emailUser = log.details?.email || log.user_id || 'System';
+      const actionName = log.action || 'System Event';
+      const targetDetail = log.details?.message || log.details?.reason || '';
 
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${dateStr}</td>
-        <td><strong>${escapeHtml(username)}</strong></td>
-        <td><span class="badge ${badgeClass}">${escapeHtml(log.action)}</span></td>
-        <td style="color:#666;">${escapeHtml(tableName)}${escapeHtml(objectId)}</td>
+        <td><strong>${escapeHtml(emailUser)}</strong></td>
+        <td><span class="badge ${badgeClass}">${escapeHtml(actionName)}</span></td>
+        <td style="color:#666;">${escapeHtml(targetDetail)}</td>
       `;
       tbody.appendChild(row);
     });
@@ -180,7 +168,6 @@ async function fetchRecentLogs() {
   }
 }
 
-// Security: Sanitizer to defend against DOM manipulation / XSS
 function escapeHtml(str) {
   if (!str) return '';
   return str.toString()
@@ -192,15 +179,16 @@ function escapeHtml(str) {
 }
 
 // ==========================================================
-// 5. BOOTSTRAP INITIALIZATION
+// 6. BOOTSTRAP INITIALIZATION
 // ==========================================================
 async function init() {
   const user = await checkAuth();
-  if (!user) return; // Terminate rendering processes if unauthorized redirect triggered
+  if (!user) return; 
 
-  // Run DOM components and Supabase queries together
+  // Hinihintay munang ma-load ang sidebar HTML bago gawin ang iba
+  await loadSidebar();
+
   await Promise.all([
-    loadSidebar(),
     fetchDashboardStats(),
     fetchRecentLogs()
   ]);
