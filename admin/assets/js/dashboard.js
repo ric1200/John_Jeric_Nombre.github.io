@@ -28,21 +28,21 @@ function checkAuth() {
         window.location.href = '../index.html';
         resolve(null);
       } else {
-        const role = sessionStorage.getItem('role');
-        if (role !== 'SUPER_ADMIN' && role !== 'ADMIN') {
-          alert("Unauthorized access.");
-          signOut(auth).then(() => {
-            window.location.href = '../index.html';
-          });
-          resolve(null);
-        } else {
+        // PANSAMANTALANG NAKA-DISABLE ANG ROLE CHECK
+        // const role = sessionStorage.getItem('role');
+        // if (role !== 'SUPER_ADMIN' && role !== 'ADMIN') {
+        //   alert("Unauthorized access.");
+        //   signOut(auth).then(() => {
+        //     window.location.href = '../index.html';
+        //   });
+        //   resolve(null);
+        // } else {
           resolve(user);
-        }
+        // }
       }
     });
   });
 }
-
 // ==========================================================
 // 3. DYNAMIC SIDEBAR LOAD & LOGIC
 // ==========================================================
