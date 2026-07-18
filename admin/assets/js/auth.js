@@ -71,7 +71,7 @@ loginForm.addEventListener('submit', async (e) => {
             setTimeout(() => {
                 // Halimbawa: window.location.href = "sysad/dashboard.html";
                 // Ilagay dito ang tamang file path ng dashboard mo:
-                window.location.href = "dashboard.html"; 
+                window.location.href = "sysad/dashboard.html"; 
             }, 1500);
 
         } else {
