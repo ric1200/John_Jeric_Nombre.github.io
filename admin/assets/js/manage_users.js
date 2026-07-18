@@ -1,6 +1,6 @@
 import { db } from './firebase-config.js'; // Siguraduhing tama ang path ng firebase config mo
 import { collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+import { db } from './firebase-config.js';
 // Global States para sa Filtering at Pagination
 let allUsers = [];
 let filteredUsers = [];
