@@ -205,15 +205,27 @@ function showMessage(msg, type) {
 
 async function logAudit(action, message) {
   try {
-      // Kunin kung sino ang nakalog-in mula sa sessionStorage. 
-      // Kung walang makita, 'System Admin' ang lalabas imbes na 'Guest'.
-      const activeUser = sessionStorage.getItem('email') || sessionStorage.getItem('username') || 'System Admin';
+      let activeUser = 'System Admin';
+
+      // 1. PINAKASIGURADO: Kunin ang email mula mismo sa Firebase Auth
+      if (auth.currentUser && auth.currentUser.email) {
+          activeUser = auth.currentUser.email;
+      } 
+      // 2. FALLBACK: Kung walang auth state, hanapin sa iba't ibang posibleng session keys
+      else if (sessionStorage.length > 0) {
+          activeUser = sessionStorage.getItem('email') || 
+                       sessionStorage.getItem('user_email') || 
+                       sessionStorage.getItem('username') || 
+                       sessionStorage.getItem('user') || 
+                       'System Admin';
+      }
 
       await addDoc(collection(db, "audit_logs"), {
           action: action,
           details: { message: message },
-          username: activeUser, // Pinalitan natin ang 'user_id' ng 'username'
-          email: activeUser,    // Dinagdag natin ang 'email' para sigurado
+          user_id: activeUser,  // Nilagay ko lahat ng variations para siguradong babasahin ng table
+          username: activeUser,
+          email: activeUser,
           timestamp: serverTimestamp()
       });
   } catch (e) {
