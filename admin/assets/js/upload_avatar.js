@@ -4,7 +4,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
@@ -18,12 +17,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
+
+// NAKALAGAY NA ANG IYONG IMGBB API KEY DITO
+const IMGBB_API_KEY = "1122e0bd2e83b03410374a48f485a532"; 
 
 let currentUserId = null;
 let selectedFile = null;
 
-// Kunin ang ID sa URL kung meron (para kung nag-eedit ng ibang user)
 const urlParams = new URLSearchParams(window.location.search);
 const targetUserId = urlParams.get('id') || urlParams.get('user_id');
 
@@ -108,34 +108,47 @@ function handleFileSelection(file) {
 }
 
 // ==========================================================
-// 4. CLOUD STORAGE UPLOAD LOGIC
+// 4. IMGBB API UPLOAD LOGIC
 // ==========================================================
 document.getElementById('avatar-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!selectedFile || !currentUserId) return;
 
+    if (!IMGBB_API_KEY) {
+        alert("Paki-lagay muna ang iyong ImgBB API Key sa code!");
+        return;
+    }
+
     uploadBtn.disabled = true;
     uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
     try {
-        const fileExtension = selectedFile.name.split('.').pop();
-        const storageRef = ref(storage, `admins/${currentUserId}_${Date.now()}.${fileExtension}`);
+        const formData = new FormData();
+        formData.append("image", selectedFile);
 
-        const snapshot = await uploadBytes(storageRef, selectedFile);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-
-        await updateDoc(doc(db, "users", currentUserId), {
-            avatar_path: downloadURL
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+            method: "POST",
+            body: formData
         });
 
-        alert("Profile picture updated successfully!");
-        
-        // Dito na siya magre-redirect pabalik sa tamang profile page na may updated picture!
-        window.location.href = targetUserId ? `profile.html?id=${targetUserId}` : "profile.html";
+        const data = await response.json();
+
+        if (data.success) {
+            const downloadURL = data.data.url;
+
+            await updateDoc(doc(db, "users", currentUserId), {
+                avatar_path: downloadURL
+            });
+
+            alert("Profile picture updated successfully!");
+            window.location.href = targetUserId ? `profile.html?id=${targetUserId}` : "profile.html";
+        } else {
+            throw new Error(data.error.message || "Failed to upload to ImgBB");
+        }
 
     } catch (error) {
         console.error("Upload error details:", error);
-        alert("Upload Failed: " + error.message); // Ipapakita na ang tunay na error!
+        alert("Upload Failed: " + error.message);
         uploadBtn.disabled = false;
         uploadBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
     }
@@ -149,7 +162,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            // Gamitin ang ID sa URL. Kung wala, gamitin ang sariling ID ng naka-login.
             currentUserId = targetUserId ? targetUserId : user.uid;
             
             const userDoc = await getDoc(doc(db, "users", currentUserId));
