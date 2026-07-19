@@ -1,24 +1,48 @@
-<!-- register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration | UCL Counseling</title>
+    
+    <!-- Link sa bagong CSS file -->
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+
 <div class="container">
+    <!-- Optional: Pwede mo ilagay ang logo dito -->
+    <div class="logo-wrap">
+        <img src="assets/image/union_logo1.png" alt="Phinma Logo" onerror="this.style.display='none'"> 
+    </div>
+
     <h2>Student Registration</h2>
+    <p class="subtitle">Only @phinmaed.com emails are allowed.</p>
+
     <form id="registerForm">
         <div class="form-group">
-            <label for="studentId">Student ID (This will be your Username)</label>
-            <input type="text" id="studentId" placeholder="e.g. 03-2021-01234" required>
+            <label for="studentId">Student ID</label>
+            <input type="text" id="studentId" placeholder="e.g. 03-2021-01234" required autocomplete="username">
         </div>
         
         <div class="form-group">
             <label for="email">PHINMA Email</label>
-            <input type="email" id="email" placeholder="e.g. judelecruz@phinmaed.com" required>
+            <input type="email" id="email" placeholder="e.g. juan@phinmaed.com" required autocomplete="email">
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" required>
+            <input type="password" id="password" placeholder="Create a strong password" required autocomplete="new-password">
         </div>
 
-        <button type="submit" id="registerBtn">Register</button>
+        <button type="submit" id="registerBtn">Create Account</button>
     </form>
+
+    <a href="index.html" class="back-link">← Back to Portal</a>
 </div>
 
+<!-- Import ang JavaScript na ginawa natin kanina -->
 <script type="module" src="assets/js/register.js"></script>
+
+</body>
+</html>
