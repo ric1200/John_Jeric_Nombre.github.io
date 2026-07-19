@@ -28,17 +28,17 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('save-btn');
     btn.disabled = true;
-    btn.innerText = "Saving...";
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
     try {
+        // Idinagdag natin ang phone_number at address dito
         await updateDoc(doc(db, "users", currentUserId), {
             first_name: document.getElementById('first_name').value,
-            middle_name: document.getElementById('middle_name').value,
             last_name: document.getElementById('last_name').value,
-            email: document.getElementById('email').value,
-            department: document.getElementById('department').value,
-            phone_number: document.getElementById('phone_number').value
+            phone_number: document.getElementById('phone_number').value,
+            address: document.getElementById('address').value
         });
+        
         alert("Profile updated successfully!");
         window.location.href = "profile.html";
     } catch (error) {
@@ -46,7 +46,7 @@ form.addEventListener('submit', async (e) => {
         alert("Error updating profile.");
     } finally {
         btn.disabled = false;
-        btn.innerText = "Save Changes";
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Save Changes';
     }
 });
 
