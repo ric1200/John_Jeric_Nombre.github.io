@@ -1,9 +1,13 @@
+// Nagdagdag tayo ng Auth imports para gumana ang signOut sa sidebar
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { app } from "./firebase-config.js"; // Siguraduhing tama ang path ng config mo
+import { app } from "./firebase-config.js"; 
 
 const db = getFirestore(app);
-let allLogs = []; // Dito natin ise-save ang lahat ng na-fetch na logs
-let filteredLogs = []; // Para sa display after i-filter
+const auth = getAuth(app); // In-initialize natin ang auth para sa logout
+
+let allLogs = []; 
+let filteredLogs = []; 
 
 const tableBody = document.getElementById("auditLogsTableBody");
 const filterForm = document.getElementById("filterForm");
@@ -19,7 +23,7 @@ function formatDateTime(isoString) {
     };
 }
 
-// Helper function para i-format ang Changed Data (at itago ang passwords)
+// Helper function para i-format ang Changed Data
 function formatChangedData(dataObj) {
     if (!dataObj || typeof dataObj !== 'object') return `<span class="text-muted">-</span>`;
     
@@ -102,7 +106,6 @@ function renderTable(logsToRender) {
 async function fetchLogs() {
     try {
         const logsRef = collection(db, "audit_logs");
-        // Kukuha ng pinakabagong 100 logs (pwede mong lakihan kung kailangan)
         const q = query(logsRef, orderBy("created_at", "desc"), limit(100)); 
         const querySnapshot = await getDocs(q);
         
@@ -148,8 +151,6 @@ clearFilterBtn.addEventListener("click", () => {
     renderTable(filteredLogs);
 });
 
-// Initialize
-window.addEventListener("DOMContentLoaded", fetchLogs);
 
 // ==========================================================
 // 3. DYNAMIC SIDEBAR LOAD & LOGIC
@@ -159,7 +160,6 @@ async function loadSidebar() {
     if (!container) return;
   
     try {
-      // Nilagyan natin ng timestamp sa dulo para laging bagong file ang kunin ng browser
       const cacheBuster = new Date().getTime();
       const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
       
@@ -172,17 +172,21 @@ async function loadSidebar() {
     } catch (err) {
       console.error("Error drawing sidebar component:", err);
     }
-  }
+}
   
-  function setupSidebarLogic() {
+function setupSidebarLogic() {
     // Setup Logout Button
     const logoutBtn = document.getElementById('logout-btn'); 
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        await signOut(auth);
-        sessionStorage.clear();
-        window.location.href = '../index.html';
+        try {
+            await signOut(auth); // Gagana na ito ngayon dahil may import sa taas
+            sessionStorage.clear();
+            window.location.href = '../index.html';
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
       });
     }
     // Highlight Active Link
@@ -193,5 +197,12 @@ async function loadSidebar() {
         link.classList.add('active');
       }
     });
-  }
-  
+}
+
+// ==========================================================
+// INITIALIZE LAHAT PAGKA-LOAD NG PAGE
+// ==========================================================
+window.addEventListener("DOMContentLoaded", () => {
+    fetchLogs();     // I-load ang table
+    loadSidebar();   // TINAWAG NA NATIN DITO ANG SIDEBAR!
+});
