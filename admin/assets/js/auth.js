@@ -86,6 +86,10 @@ loginForm.addEventListener('submit', async (e) => {
   } catch (error) {
       // Kapag may mali sa email, password, O kapag inactive ang account
       console.error("Login Error:", error);
+      
+      // 👇 DITO BINUBURA ANG LAMAN NG PASSWORD TEXTBOX KAPAG NAG-ERROR 👇
+      passwordInput.value = '';
+      
       errorMessage.style.display = 'block';
       errorMessage.style.backgroundColor = '#ffe6e6';
       errorMessage.style.color = '#d9534f';
