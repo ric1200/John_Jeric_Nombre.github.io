@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs | System Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/audit_logs.css">
+</head>
+<body>
+  
+    <!-- Placeholder para sa Sidebar mo -->
+    <!-- Pwede mo itong palitan ng actual JS-loaded sidebar mo kung meron -->
+    <aside class="sidebar no-print">
+        <h2 style="color:white; padding: 20px;">Admin Panel</h2>
+        <!-- Sidebar links here -->
+    </aside>
+
+    <div class="main-content"> 
+        <div class="container">
+            
+            <div class="page-header">
+                <div>
+                    <h2><i class="fas fa-history text-primary"></i> System Audit Logs</h2>
+                    <p class="subtitle">Track and monitor all system activities and data changes.</p>
+                </div>
+                <button onclick="window.print()" type="button" class="btn btn-secondary no-print">
+                    <i class="fas fa-print"></i> Print Report
+                </button>
+            </div>
+
+            <div class="filter-card no-print">
+                <form id="filterForm" class="filter-form">
+                    <div class="input-group">
+                        <i class="fas fa-bolt"></i>
+                        <input type="text" id="filterAction" placeholder="Action (e.g. LOGIN, UPDATE)">
+                    </div>
+
+                    <div class="input-group search-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="filterKeyword" placeholder="Search keywords or username...">
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                        <button type="button" id="clearFilterBtn" class="btn btn-light" title="Clear Filters"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="15%">Date & Time</th>
+                                <th width="15%">User</th>
+                                <th width="12%">Action</th>
+                                <th width="10%">Table</th>
+                                <th width="10%">Obj ID</th>
+                                <th width="25%">Data Changes</th>
+                                <th width="13%">IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditLogsTableBody">
+                            <!-- JS will populate this area -->
+                            <tr>
+                                <td colspan="7" class="loading-state">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading logs...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Basic Pagination Controls -->
+            <div class="pagination no-print">
+                <button id="prevBtn" class="page-btn disabled"><i class="fas fa-chevron-left"></i> Prev</button>
+                <div class="page-info">
+                    <span id="pageIndicator">Page <strong>1</strong></span>
+                </div>
+                <button id="nextBtn" class="page-btn disabled">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Firebase Logic -->
+    <script type="module" src="assets/js/audit_logs.js"></script>
+</body>
+</html>
