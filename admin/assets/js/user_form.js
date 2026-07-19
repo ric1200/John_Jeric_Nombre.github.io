@@ -1,8 +1,10 @@
 // ==========================================================
-// 1. FIREBASE INITIALIZATION & IMPORTS
+// 1. FIREBASE INITIALIZATION & IMPORTS (v10.8.0)
 // ==========================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, addDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
   authDomain: "ricproject-bb8fc.firebaseapp.com",
@@ -14,6 +16,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app); // Idinagdag para makapag-send ng email
 
 // Kunin ang ID mula sa URL (e.g., user_form.html?id=12345)
 const urlParams = new URLSearchParams(window.location.search);
@@ -73,7 +76,7 @@ async function initForm() {
     document.getElementById('form-header-title').innerText = 'Edit User Profile';
     document.getElementById('form-header-desc').innerText = 'Update the details and permissions of this account.';
     document.getElementById('submit-btn-text').innerText = 'Update User Account';
-    document.getElementById('status-group').style.display = 'block'; // Ipakita ang status dropdown
+    document.getElementById('status-group').style.display = 'block';
 
     try {
       const docRef = doc(db, "users", userId);
@@ -100,20 +103,20 @@ async function initForm() {
     // ADD MODE
     document.getElementById('page-title').innerText = 'Add User | Admin';
     document.getElementById('form-header-title').innerText = 'Add New User';
-    document.getElementById('form-header-desc').innerText = 'Fill in the details below to create a new system account.';
-    document.getElementById('submit-btn-text').innerText = 'Create User Account';
+    document.getElementById('form-header-desc').innerText = 'Fill in the details. An email will be sent to the user to set their password.';
+    document.getElementById('submit-btn-text').innerText = 'Create User & Send Invite';
   }
 }
 
 // ==========================================================
-// 4. FORM SUBMIT HANDLER (SAVE TO FIRESTORE)
+// 4. FORM SUBMIT HANDLER (SAVE TO FIRESTORE & SEND EMAIL)
 // ==========================================================
 document.getElementById('userForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving & Sending Email...';
 
   // Kunin ang mga nilagay sa form
   const userData = {
@@ -128,33 +131,61 @@ document.getElementById('userForm').addEventListener('submit', async (e) => {
 
   try {
     if (userId) {
-      // UPDATE DOCUMENT
-      userData.status = document.getElementById('status').value; // isama ang status pag edit
+      // ==========================================
+      // UPDATE DOCUMENT (Edit Mode)
+      // ==========================================
+      userData.status = document.getElementById('status').value;
       const docRef = doc(db, "users", userId);
       await updateDoc(docRef, userData);
       
-      // Audit Log para sa Update
       await logAudit("USER_UPDATE", `Updated user: ${userData.username}`);
-      
+      showMessage("User updated successfully! Redirecting...", "success");
+
     } else {
-    
-    // INSERT NEW DOCUMENT
-    userData.status = 'ACTIVE'; // Default value pag bago
-    userData.created_at = serverTimestamp(); // Gayahin ang PHP auto-timestamp
-      const newDocRef = await addDoc(collection(db, "users"), userData);
+      // ==========================================
+      // INSERT NEW DOCUMENT & SEND EMAIL (Add Mode)
+      // ==========================================
+      userData.status = 'ACTIVE';
+      userData.created_at = serverTimestamp();
       
-      // Audit Log para sa Create
-      await logAudit("USER_CREATE", `Created new user: ${userData.username}`);
+      // 1. Gumawa ng mahirap na temporary password na papasa sa security ng Firebase
+      const tempPassword = Math.random().toString(36).slice(-10) + "A1@b";
+
+      // 2. Gumawa ng "Secondary App" para hindi ma-logout ang nakaupong Admin
+      const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+      const secondaryAuth = getAuth(secondaryApp);
+
+      // 3. I-register ang user sa Authentication
+      const userCredential = await createUserWithEmailAndPassword(secondaryAuth, userData.email, tempPassword);
+      const newUserId = userCredential.user.uid; // Kunin ang UID mula sa Auth
+
+      // 4. I-save sa Firestore (ginamit natin ang setDoc para parehas ang ID ng Auth at Firestore)
+      await setDoc(doc(db, "users", newUserId), userData);
+
+      // 5. I-send ang Password Reset Email (Ito ang magiging Setup Password Link nila)
+      await sendPasswordResetEmail(auth, userData.email);
+
+      // 6. I-logout ang secondary app para malinis
+      await signOut(secondaryAuth);
+
+      await logAudit("USER_CREATE", `Created new user and sent invite to: ${userData.email}`);
+      showMessage("User created! Setup link sent to their email. Redirecting...", "success");
     }
 
-    showMessage("User saved successfully! Redirecting...", "success");
     setTimeout(() => {
       window.location.href = 'manage_users.html';
-    }, 1500);
+    }, 2500); // Binigyan natin ng extra 1 second para mabasa yung success message
 
   } catch (error) {
     console.error("Error saving document: ", error);
-    showMessage("Failed to save user: " + error.message, "error");
+    
+    // Kung ang email ay nagamit na sa ibang account:
+    if (error.code === 'auth/email-already-in-use') {
+        showMessage("Error: This email address is already registered.", "error");
+    } else {
+        showMessage("Failed to save user: " + error.message, "error");
+    }
+    
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<i class="fas fa-save"></i> Save User';
   }
@@ -177,7 +208,7 @@ async function logAudit(action, message) {
     await addDoc(collection(db, "audit_logs"), {
       action: action,
       details: { message: message },
-      user_id: sessionStorage.getItem('email') || 'Admin', // Kung sino ang gumawa
+      user_id: sessionStorage.getItem('email') || 'Admin',
       timestamp: serverTimestamp()
     });
   } catch (e) {
