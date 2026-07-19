@@ -59,8 +59,8 @@ form.addEventListener('submit', async (e) => {
 
     } catch (error) {
         console.error("Error sending reset email:", error);
-        // Kahit may error sa firebase (tulad ng 'user-not-found'), itatago natin sa success screen
-        // para sa security (katulad ng ginawa mo sa PHP)
+        // 👇 IDINAGDAG NATIN ITO PARA MAKITA ANG TUNAY NA ERROR 👇
+        alert("FIREBASE ERROR: " + error.code + "\n" + error.message); 
     } finally {
         showSuccess();
     }
