@@ -1,5 +1,5 @@
 // ==========================================================
-// 1. FIREBASE INITIALIZATION & IMPORTS (Kopya sa Dashboard mo)
+// 1. FIREBASE INITIALIZATION & IMPORTS
 // ==========================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
@@ -29,21 +29,18 @@ const filterForm = document.getElementById("filterForm");
 const clearFilterBtn = document.getElementById("clearFilterBtn");
 
 // ==========================================================
-// 3. HELPER FUNCTIONS PARA SA TABLE (UPDATED PARA SA FIRESTORE TIMESTAMP)
+// 3. HELPER FUNCTIONS PARA SA TABLE 
 // ==========================================================
 function formatDateTime(timestampField) {
     if (!timestampField) return { date: '-', time: '-' };
     
     let d;
-    // Tinitingnan kung ito ay isang Firestore Timestamp object na may .toDate()
     if (timestampField && typeof timestampField.toDate === 'function') {
         d = timestampField.toDate();
     } else {
-        // Kung ito ay ISO String o standard date string
         d = new Date(timestampField);
     }
     
-    // Check kung valid date ang kinalabasan
     if (isNaN(d.getTime())) {
         return { date: 'Invalid Date', time: '' };
     }
@@ -84,7 +81,7 @@ function getBadgeClass(action) {
     return 'badge-info';
 }
 
-// RENDER TABLE (TINANGGAL ANG TABLE AT OBJ ID COLUMNS)
+// RENDER TABLE (TINANGGAL NA ANG IP ADDRESS)
 function renderTable(logsToRender) {
     if (!tableBody) return;
     tableBody.innerHTML = '';
@@ -92,7 +89,7 @@ function renderTable(logsToRender) {
     if (logsToRender.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="5" class="empty-state" style="text-align:center; padding: 30px;">
+                <td colspan="4" class="empty-state" style="text-align:center; padding: 30px;">
                     <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom:10px;"></i>
                     <p>No logs found.</p>
                 </td>
@@ -101,15 +98,10 @@ function renderTable(logsToRender) {
     }
 
     logsToRender.forEach(log => {
-        // Ginawang fallback kung timestamp o created_at ang field name sa database
         const dt = formatDateTime(log.timestamp || log.created_at); 
         const actionBadge = getBadgeClass(log.action);
         
-        // Dynamic search sa iba't ibang posibleng pangalan ng USER Field sa database
         const displayUser = log.user || log.username || log.email || log.admin || log.user_email || (log.details && log.details.email) || 'System / Guest';
-
-        // Dynamic search sa iba't ibang posibleng pangalan ng IP Field sa database
-        const ipAddress = log.ip_address || log.ipAddress || log.ip || 'Unknown';
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -125,9 +117,7 @@ function renderTable(logsToRender) {
             <td>
                 <span class="badge ${actionBadge}">${log.action || 'UNKNOWN'}</span>
             </td>
-            <!-- Tinanggal na dito ang Table at Obj ID columns -->
             <td class="data-cell">${formatChangedData(log.changed_data || log.details)}</td>
-            <td class="ip-cell"><i class="fas fa-network-wired"></i> ${ipAddress}</td>
         `;
         tableBody.appendChild(tr);
     });
@@ -153,7 +143,7 @@ async function fetchLogs() {
 
     } catch (error) {
         console.error("Error fetching logs: ", error);
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Error loading logs: ${error.message}</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error loading logs: ${error.message}</td></tr>`;
     }
 }
 
