@@ -87,7 +87,6 @@ async function fetchProfileData(uid) {
             document.getElementById('profile-avatar').src = avatarUrl;
             document.getElementById('admin-level').innerText = data.role || data.admin_level || 'System Admin';
             document.getElementById('profile-email').innerText = data.email || 'N/A';
-            document.getElementById('profile-department').innerText = data.division || data.department || 'Not Specified';
             document.getElementById('profile-phone').innerText = data.phone_number || 'Not Specified';
             
             // Format Account ID (Ginamit ang last 6 characters ng Firebase UID para mukhang malinis)
