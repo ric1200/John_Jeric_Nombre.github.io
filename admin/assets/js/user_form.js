@@ -199,22 +199,26 @@ function showMessage(msg, type) {
   container.style.display = 'block';
   container.className = type === 'error' ? 'alert alert-danger' : 'alert alert-success';
   container.innerHTML = type === 'error' 
-    ? `<i class="fas fa-exclamation-circle"></i> ${msg}`
-    : `<i class="fas fa-check-circle"></i> ${msg}`;
+      ? `<i class="fas fa-exclamation-circle"></i> ${msg}`
+      : `<i class="fas fa-check-circle"></i> ${msg}`;
 }
 
 async function logAudit(action, message) {
   try {
-    await addDoc(collection(db, "audit_logs"), {
-      action: action,
-      details: { message: message },
-      user_id: sessionStorage.getItem('email') || 'Admin',
-      timestamp: serverTimestamp()
-    });
+      // Kunin kung sino ang nakalog-in mula sa sessionStorage. 
+      // Kung walang makita, 'System Admin' ang lalabas imbes na 'Guest'.
+      const activeUser = sessionStorage.getItem('email') || sessionStorage.getItem('username') || 'System Admin';
+
+      await addDoc(collection(db, "audit_logs"), {
+          action: action,
+          details: { message: message },
+          username: activeUser, // Pinalitan natin ang 'user_id' ng 'username'
+          email: activeUser,    // Dinagdag natin ang 'email' para sigurado
+          timestamp: serverTimestamp()
+      });
   } catch (e) {
-    console.error("Failed to insert audit log", e);
+      console.error("Failed to insert audit log", e);
   }
 }
-
 // Simulan ang page
 initForm();
