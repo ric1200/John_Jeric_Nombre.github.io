@@ -29,11 +29,25 @@ const filterForm = document.getElementById("filterForm");
 const clearFilterBtn = document.getElementById("clearFilterBtn");
 
 // ==========================================================
-// 3. HELPER FUNCTIONS PARA SA TABLE
+// 3. HELPER FUNCTIONS PARA SA TABLE (UPDATED PARA SA FIRESTORE TIMESTAMP)
 // ==========================================================
-function formatDateTime(isoString) {
-    if (!isoString) return { date: '-', time: '-' };
-    const d = new Date(isoString);
+function formatDateTime(timestampField) {
+    if (!timestampField) return { date: '-', time: '-' };
+    
+    let d;
+    // Tinitingnan kung ito ay isang Firestore Timestamp object na may .toDate()
+    if (timestampField && typeof timestampField.toDate === 'function') {
+        d = timestampField.toDate();
+    } else {
+        // Kung ito ay ISO String o standard date string
+        d = new Date(timestampField);
+    }
+    
+    // Check kung valid date ang kinalabasan
+    if (isNaN(d.getTime())) {
+        return { date: 'Invalid Date', time: '' };
+    }
+
     return {
         date: d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
         time: d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
@@ -70,6 +84,7 @@ function getBadgeClass(action) {
     return 'badge-info';
 }
 
+// RENDER TABLE (TINANGGAL ANG TABLE AT OBJ ID COLUMNS)
 function renderTable(logsToRender) {
     if (!tableBody) return;
     tableBody.innerHTML = '';
@@ -77,7 +92,7 @@ function renderTable(logsToRender) {
     if (logsToRender.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="7" class="empty-state" style="text-align:center; padding: 30px;">
+                <td colspan="5" class="empty-state" style="text-align:center; padding: 30px;">
                     <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom:10px;"></i>
                     <p>No logs found.</p>
                 </td>
@@ -86,8 +101,12 @@ function renderTable(logsToRender) {
     }
 
     logsToRender.forEach(log => {
-        const dt = formatDateTime(log.created_at || log.timestamp); // Added fallback for timestamp field
+        // Ginawang fallback kung timestamp o created_at ang field name sa database
+        const dt = formatDateTime(log.timestamp || log.created_at); 
         const actionBadge = getBadgeClass(log.action);
+        
+        // Dynamic search sa iba't ibang posibleng pangalan ng IP Field sa database
+        const ipAddress = log.ip_address || log.ipAddress || log.ip || 'Unknown';
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -103,10 +122,9 @@ function renderTable(logsToRender) {
             <td>
                 <span class="badge ${actionBadge}">${log.action || 'UNKNOWN'}</span>
             </td>
-            <td><strong>${log.table_name || '-'}</strong></td>
-            <td>${log.object_id || '-'}</td>
+            <!-- Tinanggal na dito ang Table at Obj ID columns -->
             <td class="data-cell">${formatChangedData(log.changed_data || log.details)}</td>
-            <td class="ip-cell"><i class="fas fa-network-wired"></i> ${log.ip_address || 'Unknown'}</td>
+            <td class="ip-cell"><i class="fas fa-network-wired"></i> ${ipAddress}</td>
         `;
         tableBody.appendChild(tr);
     });
@@ -119,7 +137,6 @@ async function fetchLogs() {
     if (!tableBody) return;
     try {
         const logsRef = collection(db, "audit_logs");
-        // Binago ko yung 'created_at' to 'timestamp' kung sakaling yun ang gamit mo sa firestore database mo tulad nung nasa dashboard
         const q = query(logsRef, orderBy("timestamp", "desc"), limit(100)); 
         const querySnapshot = await getDocs(q);
         
@@ -133,64 +150,9 @@ async function fetchLogs() {
 
     } catch (error) {
         console.error("Error fetching logs: ", error);
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Error loading logs: ${error.message}</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Error loading logs: ${error.message}</td></tr>`;
     }
 }
-
-// Sa loob ng function kung saan ka nag-loloop sa logs mo (halimbawa: querySnapshot.forEach(doc => { ... }))
-
-const logData = doc.data();
-
-// 1. AYUSIN ANG DATE
-let logDate = "Unknown Date";
-let logTime = "";
-
-if (logData.timestamp) {
-    let dateObj;
-    // Check kung Firestore Timestamp object siya (may .toDate() function)
-    if (typeof logData.timestamp.toDate === 'function') {
-        dateObj = logData.timestamp.toDate();
-    } else {
-        // Kung normal na string o number lang
-        dateObj = new Date(logData.timestamp);
-    }
-    
-    // I-format ang date kung valid
-    if (!isNaN(dateObj)) {
-        logDate = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-        logTime = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
-}
-
-// 2. KUNIN ANG TAMANG IP ADDRESS (i-check kung ano ang field name sa database mo)
-// Sinubukan ko ang iba't ibang posibleng pangalan ng field
-let ipAddress = logData.ipAddress || logData.ip_address || logData.ip || "Unknown";
-
-// 3. I-RENDER ANG ROW (TINANGGAL NA ANG TABLE AT OBJ ID)
-const rowHtml = `
-    <tr>
-        <td class="time-cell">
-            ${logDate}
-            <small>${logTime}</small>
-        </td>
-        <td class="user-cell">
-            <strong>${logData.user || 'System / Guest'}</strong>
-        </td>
-        <td>
-            <span class="badge ${getBadgeClass(logData.action)}">${logData.action}</span>
-        </td>
-        <td class="data-cell">
-            <!-- Ipagpalagay na may sarili kang format para sa data changes -->
-            ${formatDataChanges(logData)} 
-        </td>
-        <td class="ip-cell">
-            <i class="fas fa-network-wired"></i> ${ipAddress}
-        </td>
-    </tr>
-`;
-
-// Idagdag ang rowHtml sa iyong tbody
-document.getElementById('auditLogsTableBody').innerHTML += rowHtml;
 
 // ==========================================================
 // 5. EVENT LISTENERS FOR FILTER
@@ -232,14 +194,13 @@ async function loadSidebar() {
 
   try {
     const cacheBuster = new Date().getTime();
-    // PANSININ ITO: Ginamit natin ang ../../ dahil nasa admin/sysad/ ka
     const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
     
     if (response.ok) {
       container.innerHTML = await response.text();
       setupSidebarLogic();
     } else {
-      console.error("Failed to load sidebar. Check if ../../includes/sidebar.html exists.");
+      console.error("Failed to load sidebar. Check if ../includes/sidebar.html exists.");
     }
   } catch (err) {
     console.error("Error drawing sidebar component:", err);
@@ -253,7 +214,6 @@ function setupSidebarLogic() {
       e.preventDefault();
       await signOut(auth);
       sessionStorage.clear();
-      // Adjust path para sa logout redirect papunta sa login page
       window.location.href = '../../index.html'; 
     });
   }
@@ -268,10 +228,9 @@ function setupSidebarLogic() {
 }
 
 // ==========================================================
-// 7. BOOTSTRAP INITIALIZATION (Tulad ng sa Dashboard)
+// 7. BOOTSTRAP INITIALIZATION
 // ==========================================================
 async function init() {
-  // Hinihintay munang ma-load ang sidebar HTML bago gawin ang table
   await loadSidebar();
   await fetchLogs();
 }
