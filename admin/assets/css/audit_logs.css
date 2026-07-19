@@ -1,3 +1,24 @@
+/* Itulak ang buong page pakanan para hindi matakpan ng sidebar */
+body {
+    background: #eef2f7; /* Parehong background color ng dashboard para parehas ang theme */
+}
+
+/* Kung .container, .main-container, o .main-content man ang gamit mong class sa HTML wrapper ng table mo, gamitin mo ito: */
+.main-content { 
+    margin-left: 290px; /* Parehas na sukat mula sa dashboard.css mo */
+    padding: 30px 40px;
+    box-sizing: border-box;
+    width: calc(100% - 290px); /* Siguraduhing hindi lalagpas sa screen ang table */
+}
+
+/* Para maging responsive kapag binuksan sa cellphone/tablet (itatago ang sidebar or iibahin ang margin) */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+}
 /* ===== Base Styles ===== */
 :root {
     --primary-color: #004d40;
