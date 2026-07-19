@@ -150,3 +150,48 @@ clearFilterBtn.addEventListener("click", () => {
 
 // Initialize
 window.addEventListener("DOMContentLoaded", fetchLogs);
+
+// ==========================================================
+// 3. DYNAMIC SIDEBAR LOAD & LOGIC
+// ==========================================================
+async function loadSidebar() {
+    const container = document.getElementById('sidebar-container');
+    if (!container) return;
+  
+    try {
+      // Nilagyan natin ng timestamp sa dulo para laging bagong file ang kunin ng browser
+      const cacheBuster = new Date().getTime();
+      const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
+      
+      if (response.ok) {
+        container.innerHTML = await response.text();
+        setupSidebarLogic();
+      } else {
+        console.error("Failed to load sidebar. Check if ../includes/sidebar.html exists.");
+      }
+    } catch (err) {
+      console.error("Error drawing sidebar component:", err);
+    }
+  }
+  
+  function setupSidebarLogic() {
+    // Setup Logout Button
+    const logoutBtn = document.getElementById('logout-btn'); 
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await signOut(auth);
+        sessionStorage.clear();
+        window.location.href = '../index.html';
+      });
+    }
+    // Highlight Active Link
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+      if (link.getAttribute('href') && currentPath.includes(link.getAttribute('href').replace('..', ''))) {
+        link.classList.add('active');
+      }
+    });
+  }
+  
