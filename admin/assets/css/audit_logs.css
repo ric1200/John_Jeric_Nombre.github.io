@@ -1,79 +1,108 @@
-/* ===== Base Styles ===== */
-* {
+/* FILE: assets/css/audit_logs.css */
+
+/* =========================================
+   Base & Typography
+   ========================================= */
+   body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #eef2f7; /* Dashboard background */
+    color: #333;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
 }
 
-body {
-    background: #eef2f7; /* Background ng dashboard */
-    color: #333;
+.text-primary { color: #0a192f; }
+.text-muted { color: #6c757d; }
+
+/* =========================================
+   Sidebar (Fallback incase hindi naka-external)
+   ========================================= */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: #0a192f;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    box-sizing: border-box; 
+    overflow-y: auto;
+    z-index: 1000;
 }
 
-/* Adjust main content para hindi pumatong sa sidebar */
-.main-content { 
-    margin-left: 290px; 
+/* =========================================
+   Main Content & Containers
+   ========================================= */
+.main-content {
+    margin-left: 290px;
     padding: 30px 40px;
-    box-sizing: border-box;
     min-height: 100vh;
+    box-sizing: border-box;
+    width: calc(100% - 290px); /* Para hindi lumagpas ang table sa screen */
 }
 
-/* ===== Dashboard-Style Header ===== */
-.header {
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* =========================================
+   Dashboard-Style Cards (Header, Filter, Table)
+   ========================================= */
+.page-header, .filter-card, .table-card {
     background: #ffffff;
-    padding: 24px 30px;
     border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    border-left: 6px solid #0a192f;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Dashboard shadow */
+    margin-bottom: 25px;
 }
 
-.header-flex {
+/* Page Header */
+.page-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+    padding: 24px 30px;
+    border-left: 6px solid #0a192f; /* Dashboard accent */
 }
 
-.header h1 {
-    margin: 0 0 8px 0;
+.page-header h2 {
+    margin: 0 0 5px 0;
     font-size: 1.8rem;
     color: #0a192f;
 }
 
-.header p {
+.subtitle {
     margin: 0;
     color: #6c757d;
     font-size: 0.95rem;
 }
 
-/* ===== Dashboard-Style Cards (Table & Filters) ===== */
-.recent-activity {
-    background: #ffffff;
-    padding: 24px 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+/* Filter Card */
+.filter-card {
+    padding: 20px 30px;
 }
 
-/* ===== Filter Form ===== */
 .filter-form {
     display: flex;
-    gap: 15px;
     flex-wrap: wrap;
     align-items: center;
+    gap: 15px;
 }
 
 .input-group {
-    flex: 1;
-    min-width: 250px;
     position: relative;
-    display: flex;
-    align-items: center;
+    flex: 1;
+    min-width: 180px;
 }
+
+.search-group { flex: 2; }
 
 .input-group i {
     position: absolute;
     left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
     color: #6c757d;
 }
 
@@ -83,43 +112,52 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 0.95rem;
+    box-sizing: border-box;
     outline: none;
     transition: 0.2s;
 }
 
-.input-group input:focus { 
-    border-color: #0a192f; 
+.input-group input:focus {
+    border-color: #0a192f;
 }
 
-.filter-actions { 
-    display: flex; 
-    gap: 10px; 
+.filter-actions {
+    display: flex;
+    gap: 10px;
 }
 
-/* ===== Buttons ===== */
-.btn-print, .btn-filter, .btn-clear {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
+/* =========================================
+   Buttons
+   ========================================= */
+.btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: 0.2s;
+    padding: 10px 18px;
     font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
 }
 
-.btn-print { background: #3f51b5; color: white; }
-.btn-print:hover { background: #2c387e; }
+.btn-primary { background-color: #0a192f; color: #fff; }
+.btn-primary:hover { background-color: #050d1a; transform: translateY(-1px); }
 
-.btn-filter { background: #0a192f; color: white; }
-.btn-filter:hover { background: #050d1a; }
+.btn-secondary { background-color: #3f51b5; color: #fff; }
+.btn-secondary:hover { background-color: #2c387e; }
 
-.btn-clear { background: #e0e0e0; color: #333; }
-.btn-clear:hover { background: #bdbdbd; }
+.btn-light { background-color: #e0e0e0; color: #333; }
+.btn-light:hover { background-color: #bdbdbd; }
 
-/* ===== Table Styling ===== */
+/* =========================================
+   Modern Table Design (From your old CSS)
+   ========================================= */
+.table-card {
+    padding: 24px 30px;
+}
+
 .table-responsive {
     overflow-x: auto;
 }
@@ -127,117 +165,158 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
+    white-space: nowrap;
 }
 
-th, td {
-    padding: 16px;
-    text-align: left;
+table th, table td {
+    padding: 16px 20px;
+    vertical-align: middle;
     border-bottom: 1px solid #edf2f9;
+    text-align: left;
     font-size: 0.95rem;
 }
 
-th {
+table thead th {
     background-color: #f8f9fa;
     color: #6c757d;
     font-weight: 600;
-    font-size: 0.85rem;
     text-transform: uppercase;
-}
-
-tbody tr:hover { 
-    background-color: #fcfcfc; 
-}
-
-/* ===== Badges & Formatting ===== */
-.badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.85rem;
     letter-spacing: 0.5px;
 }
-.badge-success { background: #e6f9ec; color: #28a745; }
-.badge-danger { background: #ffebee; color: #dc3545; }
-.badge-warning { background: #fff8e1; color: #ffc107; }
-.badge-info { background: #e0f3ff; color: #007bff; }
 
-.user-meta, .time-cell small { 
-    display: block; 
-    color: #6c757d; 
-    font-size: 0.85rem; 
+table tbody tr:hover {
+    background-color: #fcfcfc;
 }
 
-.ip-cell { 
-    color: #6c757d; 
-    font-size: 0.85rem; 
-}
+/* Table Specific Cells */
+.time-cell { color: #64748b; }
+.time-cell small { color: #94a3b8; display: block; font-size: 0.85rem;}
+.user-cell strong { color: #0a192f; display: block; }
+.user-meta { font-size: 0.85rem; color: #6c757d; }
+.ip-cell { color: #64748b; font-family: monospace; }
 
-.data-list {
+/* Data Changes Cell */
+.data-cell {
+    white-space: normal;
+    min-width: 250px;
+}
+.data-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
     background: #f8f9fa;
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
-    border: 1px solid #e9ecef;
-    max-height: 120px;
-    overflow-y: auto;
+    border: 1px solid #edf2f9;
 }
+.data-item { font-size: 0.85rem; line-height: 1.4; }
+.data-key { font-weight: 600; color: #64748b; }
+.data-val { color: #0a192f; font-family: monospace; word-break: break-all;}
 
-.data-item { margin-bottom: 4px; font-size: 0.85rem; }
-.data-key { font-weight: 600; color: #495057; }
-.data-val { color: #0a192f; }
+/* Empty/Loading State */
+.empty-state, .loading-state { text-align: center; padding: 50px 20px !important; color: #6c757d; }
 
-.loading-state, .empty-state { 
-    text-align: center; 
-    padding: 40px !important; 
-    color: #6c757d; 
+/* =========================================
+   Modern Soft Badges
+   ========================================= */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
 }
+.badge-success { background-color: #e6f9ec; color: #28a745; }
+.badge-danger { background-color: #ffebee; color: #dc3545; }
+.badge-warning { background-color: #fff8e1; color: #ffc107; }
+.badge-info { background-color: #e0f3ff; color: #007bff; }
 
-/* ===== Pagination ===== */
+/* =========================================
+   Pagination
+   ========================================= */
 .pagination {
+    margin-top: 25px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 15px;
-    margin-top: 20px;
     padding-top: 15px;
     border-top: 1px solid #edf2f9;
 }
 
 .page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     padding: 8px 16px;
+    background: #ffffff;
     border: 1px solid #ddd;
-    background: white;
-    cursor: pointer;
+    color: #333;
     border-radius: 6px;
     font-weight: 500;
     transition: 0.2s;
 }
 
-.page-btn:hover:not(.disabled) {
-    background: #f8f9fa;
-}
+.page-btn:hover:not(.disabled) { background: #f8f9fa; }
+.page-btn.disabled { opacity: 0.5; pointer-events: none; }
 
-.page-btn.disabled { 
-    opacity: 0.5; 
-    cursor: not-allowed; 
-}
-
-/* ===== Responsive Setup ===== */
+/* =========================================
+   Responsive Adjustments
+   ========================================= */
 @media (max-width: 1024px) {
     .main-content {
         margin-left: 0;
+        width: 100%;
         padding: 20px;
     }
-    .header-flex {
+    .page-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
     }
 }
 
-/* ===== Print Media Query ===== */
+/* =========================================
+   Print Styles (Your Custom Layout)
+   ========================================= */
 @media print {
-    .no-print { display: none !important; }
-    .main-content { padding: 0; margin: 0; }
-    .recent-activity, .header { box-shadow: none; border: 1px solid #000; }
-    th, td { border: 1px solid #000; }
+    @page { size: landscape; margin: 10mm; }
+    body { background-color: #fff; }
+    .no-print, .sidebar { display: none !important; }
+    
+    .main-content { 
+        margin: 0 !important; 
+        padding: 0 !important; 
+        width: 100% !important; 
+    }
+    
+    .page-header, .table-card { 
+        box-shadow: none !important; 
+        border: none !important; 
+        padding: 0 !important;
+        overflow: visible !important; 
+    }
+    
+    .page-header { margin-bottom: 20px !important; }
+    .table-responsive { overflow: visible !important; }
+    
+    table { width: 100% !important; table-layout: auto !important; }
+    table th, table td { 
+        padding: 8px 6px !important; 
+        border-bottom: 1px solid #ccc !important; 
+        font-size: 10pt !important; 
+        white-space: normal !important; 
+        word-wrap: break-word !important; 
+    }
+    
+    table th { 
+        background-color: transparent !important; 
+        color: #000 !important; 
+        border-bottom: 2px solid #000 !important; 
+    }
+    
+    .data-cell { max-width: 300px; }
+    .badge { border: 1px solid #666; color: #000 !important; background: transparent !important; }
 }
