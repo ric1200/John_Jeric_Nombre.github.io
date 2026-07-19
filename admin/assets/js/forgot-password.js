@@ -59,7 +59,7 @@ form.addEventListener('submit', async (e) => {
 
     } catch (error) {
         console.error("Error sending reset email:", error);
-        // 👇 IDINAGDAG NATIN ITO PARA MAKITA ANG TUNAY NA ERROR 👇
+        // Ito ang magsasabi sa atin ng totoong problema:
         alert("FIREBASE ERROR: " + error.code + "\n" + error.message); 
     } finally {
         showSuccess();
