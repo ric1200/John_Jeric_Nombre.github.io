@@ -89,6 +89,9 @@ async function fetchProfileData(uid) {
             document.getElementById('profile-email').innerText = data.email || 'N/A';
             document.getElementById('profile-phone').innerText = data.phone_number || 'Not Specified';
             
+            // ITO YUNG BAGONG DAGDAG PARA SA ADDRESS
+            document.getElementById('profile-address').innerText = data.address || 'Not Specified';
+            
             // Format Account ID (Ginamit ang last 6 characters ng Firebase UID para mukhang malinis)
             document.getElementById('account-id').innerText = `#USR-${uid.substring(uid.length - 6).toUpperCase()}`;
 
