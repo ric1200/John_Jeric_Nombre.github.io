@@ -178,7 +178,7 @@ async function loadSidebar() {
   try {
     const cacheBuster = new Date().getTime();
     // PANSININ ITO: Ginamit natin ang ../../ dahil nasa admin/sysad/ ka
-    const response = await fetch(`../../includes/sidebar.html?v=${cacheBuster}`);
+    const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
     
     if (response.ok) {
       container.innerHTML = await response.text();
