@@ -14,63 +14,62 @@
  <!-- Container to dynamically pull in your sidebar -->
  <div id="sidebar-container"></div>
 
- 
     <div class="main-content"> 
-        <div class="container">
             
-            <div class="page-header">
-                <div>
-                    <h2><i class="fas fa-history text-primary"></i> System Audit Logs</h2>
-                    <p class="subtitle">Track and monitor all system activities and data changes.</p>
-                </div>
-                <button onclick="window.print()" type="button" class="btn btn-secondary no-print">
-                    <i class="fas fa-print"></i> Print Report
-                </button>
+        <!-- Header Section (Tulad ng sa Dashboard) -->
+        <div class="header header-flex">
+            <div>
+                <h1><i class="fas fa-history" style="color: #0a192f; margin-right: 10px;"></i>System Audit Logs</h1>
+                <p>Track and monitor all system activities and data changes.</p>
             </div>
+            <button onclick="window.print()" type="button" class="btn-print no-print">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>
 
-            <div class="filter-card no-print">
-                <form id="filterForm" class="filter-form">
-                    <div class="input-group">
-                        <i class="fas fa-bolt"></i>
-                        <input type="text" id="filterAction" placeholder="Action (e.g. LOGIN, UPDATE)">
-                    </div>
-
-                    <div class="input-group search-group">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="filterKeyword" placeholder="Search keywords or username...">
-                    </div>
-
-                    <div class="filter-actions">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
-                        <button type="button" id="clearFilterBtn" class="btn btn-light" title="Clear Filters"><i class="fas fa-sync-alt"></i></button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="table-card">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th width="15%">Date & Time</th>
-                                <th width="15%">User</th>
-                                <th width="12%">Action</th>
-                                <th width="10%">Table</th>
-                                <th width="10%">Obj ID</th>
-                                <th width="25%">Data Changes</th>
-                                <th width="13%">IP Address</th>
-                            </tr>
-                        </thead>
-                        <tbody id="auditLogsTableBody">
-                            <!-- JS will populate this area -->
-                            <tr>
-                                <td colspan="7" class="loading-state">
-                                    <i class="fas fa-spinner fa-spin"></i> Loading logs...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- Filter Card Section (Kaparehas ng card style sa Dashboard) -->
+        <div class="recent-activity no-print" style="margin-bottom: 24px;">
+            <form id="filterForm" class="filter-form">
+                <div class="input-group">
+                    <i class="fas fa-bolt"></i>
+                    <input type="text" id="filterAction" placeholder="Action (e.g. LOGIN, UPDATE)">
                 </div>
+
+                <div class="input-group search-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="filterKeyword" placeholder="Search keywords or username...">
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn-filter"><i class="fas fa-filter"></i> Filter</button>
+                    <button type="button" id="clearFilterBtn" class="btn-clear" title="Clear Filters"><i class="fas fa-sync-alt"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table Card Section (Tulad ng Recent Activity Table sa Dashboard) -->
+        <div class="recent-activity">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="15%">Date & Time</th>
+                            <th width="15%">User</th>
+                            <th width="12%">Action</th>
+                            <th width="10%">Table</th>
+                            <th width="10%">Obj ID</th>
+                            <th width="25%">Data Changes</th>
+                            <th width="13%">IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditLogsTableBody">
+                        <tr>
+                            <td colspan="7" class="loading-state">
+                                <i class="fas fa-spinner fa-spin"></i> Loading logs...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <!-- Basic Pagination Controls -->
@@ -81,8 +80,8 @@
                 </div>
                 <button id="nextBtn" class="page-btn disabled">Next <i class="fas fa-chevron-right"></i></button>
             </div>
-
         </div>
+
     </div>
 
     <!-- Firebase Logic -->
