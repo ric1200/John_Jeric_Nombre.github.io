@@ -137,6 +137,61 @@ async function fetchLogs() {
     }
 }
 
+// Sa loob ng function kung saan ka nag-loloop sa logs mo (halimbawa: querySnapshot.forEach(doc => { ... }))
+
+const logData = doc.data();
+
+// 1. AYUSIN ANG DATE
+let logDate = "Unknown Date";
+let logTime = "";
+
+if (logData.timestamp) {
+    let dateObj;
+    // Check kung Firestore Timestamp object siya (may .toDate() function)
+    if (typeof logData.timestamp.toDate === 'function') {
+        dateObj = logData.timestamp.toDate();
+    } else {
+        // Kung normal na string o number lang
+        dateObj = new Date(logData.timestamp);
+    }
+    
+    // I-format ang date kung valid
+    if (!isNaN(dateObj)) {
+        logDate = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        logTime = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+}
+
+// 2. KUNIN ANG TAMANG IP ADDRESS (i-check kung ano ang field name sa database mo)
+// Sinubukan ko ang iba't ibang posibleng pangalan ng field
+let ipAddress = logData.ipAddress || logData.ip_address || logData.ip || "Unknown";
+
+// 3. I-RENDER ANG ROW (TINANGGAL NA ANG TABLE AT OBJ ID)
+const rowHtml = `
+    <tr>
+        <td class="time-cell">
+            ${logDate}
+            <small>${logTime}</small>
+        </td>
+        <td class="user-cell">
+            <strong>${logData.user || 'System / Guest'}</strong>
+        </td>
+        <td>
+            <span class="badge ${getBadgeClass(logData.action)}">${logData.action}</span>
+        </td>
+        <td class="data-cell">
+            <!-- Ipagpalagay na may sarili kang format para sa data changes -->
+            ${formatDataChanges(logData)} 
+        </td>
+        <td class="ip-cell">
+            <i class="fas fa-network-wired"></i> ${ipAddress}
+        </td>
+    </tr>
+`;
+
+// Idagdag ang rowHtml sa iyong tbody
+document.getElementById('auditLogsTableBody').innerHTML += rowHtml;
+
 // ==========================================================
 // 5. EVENT LISTENERS FOR FILTER
 // ==========================================================
