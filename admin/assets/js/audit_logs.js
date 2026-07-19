@@ -101,7 +101,7 @@ function renderTable(logsToRender) {
         const dt = formatDateTime(log.timestamp || log.created_at); 
         const actionBadge = getBadgeClass(log.action);
         
-        const displayUser = log.user || log.username || log.email || log.admin || log.user_email || (log.details && log.details.email) || 'System / Guest';
+        const displayUser = log.user_id || log.username || log.email || log.user || log.admin || log.user_email || (log.details && log.details.email) || 'System / Guest';
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
