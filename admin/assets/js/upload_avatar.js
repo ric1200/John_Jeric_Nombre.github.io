@@ -23,6 +23,10 @@ const storage = getStorage(app);
 let currentUserId = null;
 let selectedFile = null;
 
+// Kunin ang ID sa URL kung meron (para kung nag-eedit ng ibang user)
+const urlParams = new URLSearchParams(window.location.search);
+const targetUserId = urlParams.get('id') || urlParams.get('user_id');
+
 // ==========================================================
 // 2. DYNAMIC SIDEBAR LOAD
 // ==========================================================
@@ -59,10 +63,8 @@ const fileInput = document.getElementById('avatarInput');
 const imgPreview = document.getElementById('imgPreview');
 const uploadBtn = document.getElementById('upload-btn');
 
-// Click trigger para sa nakatagong file input
 dropZone.addEventListener('click', () => fileInput.click());
 
-// Visual feed kapag nagda-drag ng file sa taas ng box
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.style.borderColor = '#3b82f6';
@@ -87,7 +89,6 @@ fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) handleFileSelection(e.target.files[0]);
 });
 
-// Pag-verify ng piniling larawan
 function handleFileSelection(file) {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     
@@ -96,14 +97,14 @@ function handleFileSelection(file) {
         return;
     }
 
-    if (file.size > 2 * 1024 * 1024) { // 2MB limit
+    if (file.size > 2 * 1024 * 1024) { 
         alert("File is too large. Maximum size is 2MB.");
         return;
     }
 
     selectedFile = file;
     imgPreview.src = URL.createObjectURL(file);
-    uploadBtn.disabled = false; // Hayaan nang i-click ang save button
+    uploadBtn.disabled = false; 
 }
 
 // ==========================================================
@@ -117,27 +118,24 @@ document.getElementById('avatar-form').addEventListener('submit', async (e) => {
     uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
     try {
-        // A. Gumawa ng target reference sa Firebase Storage
         const fileExtension = selectedFile.name.split('.').pop();
         const storageRef = ref(storage, `admins/${currentUserId}_${Date.now()}.${fileExtension}`);
 
-        // B. I-upload ang actual blob ng image
         const snapshot = await uploadBytes(storageRef, selectedFile);
-        
-        // C. Kunin ang public access URL ng kaka-upload na image
         const downloadURL = await getDownloadURL(snapshot.ref);
 
-        // D. I-save ang URL na nakuha sa Firestore User Document
         await updateDoc(doc(db, "users", currentUserId), {
             avatar_path: downloadURL
         });
 
         alert("Profile picture updated successfully!");
-        window.location.href = "profile.html";
+        
+        // Dito na siya magre-redirect pabalik sa tamang profile page na may updated picture!
+        window.location.href = targetUserId ? `profile.html?id=${targetUserId}` : "profile.html";
 
     } catch (error) {
         console.error("Upload error details:", error);
-        alert("Failed to upload image. Please try again.");
+        alert("Upload Failed: " + error.message); // Ipapakita na ang tunay na error!
         uploadBtn.disabled = false;
         uploadBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
     }
@@ -151,9 +149,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            currentUserId = user.uid;
+            // Gamitin ang ID sa URL. Kung wala, gamitin ang sariling ID ng naka-login.
+            currentUserId = targetUserId ? targetUserId : user.uid;
             
-            // I-load ang lumang avatar at pangalan ng admin para may background indicator
             const userDoc = await getDoc(doc(db, "users", currentUserId));
             if (userDoc.exists()) {
                 const data = userDoc.data();
