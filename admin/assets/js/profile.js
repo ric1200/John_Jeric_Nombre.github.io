@@ -19,7 +19,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 // ==========================================================
-// 2. LOAD SIDEBAR
+// 2. DYNAMIC SIDEBAR LOAD & LOGIC
 // ==========================================================
 async function loadSidebar() {
     const container = document.getElementById('sidebar-container');
@@ -29,22 +29,37 @@ async function loadSidebar() {
         const response = await fetch(`../includes/sidebar.html?v=${cacheBuster}`);
         if (response.ok) {
             container.innerHTML = await response.text();
-            
-            // Setup logout button
-            const logoutBtn = document.getElementById('logout-btn'); 
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    sessionStorage.clear();
-                    auth.signOut().then(() => {
-                        window.location.href = '../login.html';
-                    });
-                });
-            }
+            setupSidebarLogic(); // Tinawag natin yung function sa ibaba
+        } else {
+            console.error("Failed to load sidebar.");
         }
     } catch (err) {
         console.error("Error loading sidebar:", err);
     }
+}
+
+function setupSidebarLogic() {
+    // Setup Logout Button
+    const logoutBtn = document.getElementById('logout-btn'); 
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            sessionStorage.clear();
+            auth.signOut().then(() => {
+                window.location.href = '../index.html';
+            });
+        });
+    }
+
+    // Highlight Active Link (Ito yung mag-uupdate ng kulay sa gilid!)
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && currentPath.includes(href.replace('..', ''))) {
+            link.classList.add('active');
+        }
+    });
 }
 
 // ==========================================================
