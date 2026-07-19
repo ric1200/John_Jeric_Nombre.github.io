@@ -105,6 +105,9 @@ function renderTable(logsToRender) {
         const dt = formatDateTime(log.timestamp || log.created_at); 
         const actionBadge = getBadgeClass(log.action);
         
+        // Dynamic search sa iba't ibang posibleng pangalan ng USER Field sa database
+        const displayUser = log.user || log.username || log.email || log.admin || log.user_email || (log.details && log.details.email) || 'System / Guest';
+
         // Dynamic search sa iba't ibang posibleng pangalan ng IP Field sa database
         const ipAddress = log.ip_address || log.ipAddress || log.ip || 'Unknown';
 
@@ -116,7 +119,7 @@ function renderTable(logsToRender) {
             </td>
             <td>
                 <div class="user-cell">
-                    <strong>${log.username || log.details?.email || 'System / Guest'}</strong>
+                    <strong>${displayUser}</strong>
                 </div>
             </td>
             <td>
