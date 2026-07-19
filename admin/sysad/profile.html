@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile | UCL Counseling System</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css"> 
+    <link rel="stylesheet" href="../assets/css/profile.css"> 
+    <link rel="stylesheet" href="../includes/sidebar.css">
+</head>
+<body>
+
+    <!-- Dito papasok ang Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <div class="main-content">
+        <div class="container">
+            
+            <div class="page-header">
+                <h1>Administrator Profile</h1>
+                <p class="subtitle">Personal information and account settings.</p>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" style="text-align: center; padding: 50px;">
+                <i class="fas fa-spinner fa-spin fa-3x"></i>
+                <p>Loading profile...</p>
+            </div>
+
+            <!-- Profile Content (Nakatago by default hanggang matapos mag-load) -->
+            <div class="profile-grid" id="profile-content" style="display: none;">
+                <div class="data-card avatar-section">
+                    <div class="avatar-container">
+                        <img src="../assets/image/default_admin.png" alt="Admin Avatar" id="profile-avatar" class="profile-avatar">
+                        <a href="#" id="edit-avatar-btn" class="btn-avatar-edit" title="Change Photo">
+                            <i class="fas fa-camera"></i>
+                        </a>
+                    </div>
+                    <h2 class="profile-name" id="profile-name">Loading Name...</h2>
+                    <span class="badge-role"><i class="fas fa-shield-alt"></i> <span id="admin-level">System Admin</span></span>
+                    
+                    <a href="#" id="edit-profile-btn" class="btn-edit-profile">
+                        <i class="fas fa-user-edit"></i> Edit Profile Details
+                    </a>
+                </div>
+
+                <div class="data-card">
+                    <div class="section-title"><i class="fas fa-info-circle"></i> Account Information</div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <span class="detail-label">Email Address</span>
+                            <span class="detail-value" id="profile-email">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class="fas fa-building"></i></div>
+                        <div>
+                            <span class="detail-label">Division / Department</span>
+                            <span class="detail-value" id="profile-department">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <span class="detail-label">Phone Number</span>
+                            <span class="detail-value" id="profile-phone">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class="fas fa-key"></i></div>
+                        <div>
+                            <span class="detail-label">Account ID</span>
+                            <span class="detail-value" id="account-id" style="font-family: monospace;">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JS Logic para sa Profile -->
+    <script type="module" src="../assets/js/profile.js"></script>
+</body>
+</html>
