@@ -108,7 +108,6 @@ async function fetchUsers() {
 window.handleFilters = function() {
   const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
   const selectedRole = document.getElementById('roleFilter').value;
-  const selectedDivision = document.getElementById('divisionFilter').value;
   const resetContainer = document.getElementById('resetButtonContainer');
 
   filteredUsers = allUsers.filter(user => {
@@ -122,12 +121,11 @@ window.handleFilters = function() {
       username.includes(searchText);
 
     const matchesRole = !selectedRole || user.role === selectedRole;
-    const matchesDivision = !selectedDivision || user.division === selectedDivision;
 
-    return matchesSearch && matchesRole && matchesDivision;
+    return matchesSearch && matchesRole;
   });
 
-  if (searchText || selectedRole || selectedDivision) {
+  if (searchText || selectedRole ) {
     resetContainer.innerHTML = `<button type="button" class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-undo"></i> Reset</button>`;
   } else {
     resetContainer.innerHTML = '';
@@ -196,7 +194,6 @@ function renderTable() {
       </td>
       <td>
         <span class="badge badge-role">${user.role || ''}</span><br>
-        <span class="sub-text div-text">${user.division || ''}</span>
       </td>
       <td><strong>${user.username || ''}</strong></td>
       <td>${statusBadge}</td>
