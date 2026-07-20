@@ -6,6 +6,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #eef2f7; /* Clean light background para lumitaw ang glass sidebar */
     color: #333;
+    overflow-x: hidden; /* Prevent accidental horizontal scrolling globally */
 }
 
 /* Adjust main content to make room for the 290px sidebar */
@@ -14,6 +15,8 @@ body {
     padding: 30px 40px;
     min-height: 100vh;
     box-sizing: border-box;
+    transition: margin-left 0.3s ease, padding 0.3s ease;
+    max-width: 100%;
 }
 
 /* Header Section */
@@ -30,6 +33,7 @@ body {
     margin: 0 0 8px 0;
     font-size: 1.8rem;
     color: #0a192f;
+    line-height: 1.2;
 }
 
 .header p {
@@ -41,21 +45,9 @@ body {
 /* Dashboard Stats Grid - INAYOS PARA ISANG HILERA */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns palagi */
+    grid-template-columns: repeat(4, 1fr); /* 4 columns palagi sa desktop */
     gap: 24px;
     margin-bottom: 30px;
-}
-
-/* Responsive Grid para sa smaller screens */
-@media (max-width: 1024px) {
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns sa tablet */
-    }
-}
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr; /* 1 column sa phone */
-    }
 }
 
 /* Individual Stat Cards */
@@ -106,6 +98,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* Allows the button to wrap to the next line on very small screens */
+    gap: 15px;
     margin-bottom: 20px;
 }
 
@@ -123,15 +117,24 @@ body {
     border-radius: 6px;
     border: 1px solid #ddd;
     transition: all 0.2s ease;
+    white-space: nowrap; /* Prevents button text from breaking into two lines */
 }
 
 .btn-secondary:hover {
     background: #e2e6ea;
 }
 
+/* Table Responsiveness */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Enables horizontal scroll ONLY for the table on mobile */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS devices */
+}
+
 .table-responsive table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px; /* Forces the table to stay readable; triggers horizontal scroll if container is smaller */
 }
 
 .table-responsive th, 
@@ -147,6 +150,7 @@ body {
     font-weight: 600;
     font-size: 0.85rem;
     text-transform: uppercase;
+    white-space: nowrap; /* Keeps headers from wrapping awkwardly */
 }
 
 .table-responsive tbody tr:hover {
@@ -164,3 +168,57 @@ body {
 .badge-info { background: #e0f3ff; color: #007bff; }
 .badge-success { background: #e6f9ec; color: #28a745; }
 .badge-danger { background: #ffebee; color: #dc3545; }
+
+
+/* =========================================
+   MEDIA QUERIES FOR RESPONSIVENESS
+   ========================================= */
+
+/* Laptop / Tablets Landscape (Max: 1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0; /* Assumes sidebar collapses to a hamburger menu or off-canvas */
+        padding: 25px;
+    }
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+        gap: 20px;
+    }
+}
+
+/* Tablets Portrait & Large Mobile (Max: 768px) */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 15px;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* 1 column for mobile */
+        gap: 15px;
+    }
+    .header {
+        padding: 20px;
+    }
+    .header h1 {
+        font-size: 1.5rem; /* Scale down heading */
+    }
+    .recent-activity {
+        padding: 20px;
+    }
+}
+
+/* Small Mobile Phones (Max: 480px) */
+@media (max-width: 480px) {
+    .header, .recent-activity, .stat-card {
+        padding: 15px; /* Reclaim horizontal space on very small screens */
+    }
+    .stat-content h3 {
+        font-size: 2rem; /* Make stat numbers slightly smaller */
+    }
+    .header-row h3 {
+        font-size: 1.1rem;
+    }
+    .btn-secondary {
+        width: 100%;
+        text-align: center; /* Makes the button full width and centered when stacked */
+    }
+}
