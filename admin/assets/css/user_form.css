@@ -13,6 +13,7 @@ body {
     padding: 30px 40px;
     min-height: 100vh;
     box-sizing: border-box;
+    transition: margin-left 0.3s ease, padding 0.3s ease; /* Added for smooth sidebar toggle */
 }
 
 .form-container {
@@ -130,7 +131,7 @@ input, select {
     font-size: 0.95rem;
     color: #1e293b;
     background-color: #f8fafc;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
     transition: all 0.3s ease;
 }
 
@@ -174,6 +175,7 @@ input:focus, select:focus {
     align-items: center;
     gap: 8px;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .btn-primary {
@@ -198,10 +200,55 @@ input:focus, select:focus {
     color: #1e293b;
 }
 
-/* Responsive adjust para mag-stack sa phone */
+/* =========================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================= */
+
+/* Tablets & Laptops (Max Width: 1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0; /* Align full width to match the off-canvas sidebar */
+        padding: 70px 20px 30px; /* Add top space for mobile hamburger toggle */
+    }
+}
+
+/* Standard Mobile View (Max Width: 768px) */
 @media (max-width: 768px) {
     .form-row {
         flex-direction: column;
         gap: 15px;
+    }
+    
+    .form-card {
+        padding: 25px 20px; /* Shrink padding slightly to maximize screen space */
+    }
+    
+    .status-group {
+        max-width: 100%; /* Make dropdown span full width on small screens */
+    }
+}
+
+/* Small Mobile Phones (Max Width: 480px) */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 70px 15px 20px;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .form-card {
+        padding: 20px 15px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse; /* Stacks buttons vertically, prioritizing primary action on top */
+        gap: 10px;
+    }
+
+    .form-actions .btn {
+        width: 100%; /* Stretch buttons to cover the full width */
+        justify-content: center; /* Center the text and icons inside */
     }
 }
