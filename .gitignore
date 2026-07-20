@@ -1,6 +1,0 @@
-# Huwag i-upload ang environment variables (nandito ang passwords!)
-.env
-
-# (Opsyonal) Kung gumagamit ka ng Composer o Node, itago rin ang mga ito:
-vendor/
-node_modules/
