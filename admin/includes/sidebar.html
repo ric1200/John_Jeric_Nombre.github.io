@@ -3,7 +3,12 @@
 
 <!-- Hamburger Button (Visible only on tablet/mobile) -->
 <label for="mobile-sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle Navigation">
-  <i class="fas fa-bars"></i>
+  <!-- Gumamit tayo ng SVG para 100% laging lalabas ang icon -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
 </label>
 
 <!-- Dark Overlay (Clicking outside the sidebar closes it on mobile) -->
@@ -13,14 +18,12 @@
     
   <!-- Header with Logo -->
   <div class="sidebar-header">
-      <!-- Dito papasok ang Union Logo -->
       <img src="../assets/image/union_logo.png" alt="Union Logo" class="sidebar-logo" onerror="this.style.display='none'">
       <h2>UCL Admin</h2>
   </div>
 
-  <!-- Navigation Links -->
   <div class="nav-links">
-    <a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
     <a href="manage_users.html"><i class="fas fa-users"></i> Manage Users</a>
     <a href="audit_logs.html"><i class="fas fa-clipboard-list"></i> Audit Logs</a>
     <a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a>
