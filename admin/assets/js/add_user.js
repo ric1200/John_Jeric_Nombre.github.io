@@ -64,14 +64,6 @@ addUserForm.addEventListener('submit', async (e) => {
       createdAt: new Date().toISOString()
     };
 
-    // Idagdag ang mga specific na data depende sa role
-    if (role === 'admin') {
-      userData.department = document.getElementById('department').value;
-    } else if (role === 'counselor') {
-      userData.specialization = document.getElementById('specialization').value;
-      userData.office_location = document.getElementById('office_location').value;
-    }
-
     // Step C: I-save ang user profile sa "users" collection sa Firestore
     await setDoc(doc(db, "users", user.uid), userData);
 
