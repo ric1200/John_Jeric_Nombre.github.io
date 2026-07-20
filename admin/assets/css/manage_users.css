@@ -13,6 +13,7 @@ body {
     padding: 30px 40px;
     min-height: 100vh;
     box-sizing: border-box;
+    transition: margin-left 0.3s ease, padding 0.3s ease;
 }
 
 /* Page Header */
@@ -85,6 +86,7 @@ body {
     color: #4a5568;
     background: #f8fafc;
     transition: all 0.3s ease;
+    box-sizing: border-box; /* Added to prevent padding from expanding the element */
 }
 
 .search-text {
@@ -117,6 +119,7 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.2s ease;
+    box-sizing: border-box; /* Added for sizing consistency */
 }
 
 .btn-search {
@@ -142,6 +145,7 @@ body {
     background: #10b981;
     color: white;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    white-space: nowrap; /* Prevents text wrap on small screens */
 }
 
 .btn-add:hover {
@@ -153,12 +157,15 @@ body {
 /* Modern Table Styles */
 .table-responsive {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    width: 100%;
 }
 
 table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+    min-width: 800px; /* Forces table to keep its shape and triggers horizontal scroll when needed */
 }
 
 th, td {
@@ -231,6 +238,7 @@ tbody tr:hover {
 .actions-cell {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap; /* Allows buttons to wrap on very tight columns */
 }
 
 .action-btn {
@@ -289,6 +297,7 @@ tbody tr:hover {
     justify-content: center;
     gap: 15px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .page-btn {
@@ -321,4 +330,80 @@ tbody tr:hover {
 .page-info {
     color: #64748b;
     font-size: 0.95rem;
+}
+
+/* =========================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================= */
+
+/* Tablets & Small Laptops (Max Width: 1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0; /* Remove sidebar margin when sidebar collapses */
+        padding: 70px 20px 30px; /* Add top padding so content doesn't hide behind mobile hamburger menu */
+    }
+}
+
+/* Mobile Devices (Max Width: 768px) */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .data-card {
+        padding: 20px;
+    }
+
+    .top-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .search-wrapper,
+    .search-text,
+    .select-filter,
+    .btn-search,
+    .btn-add,
+    .reset-container {
+        width: 100%;
+    }
+
+    .reset-container .btn {
+        width: 100%; /* Ensures dynamic reset button stretches too */
+    }
+
+    .btn {
+        justify-content: center; /* Centers text and icons in full-width buttons */
+    }
+}
+
+/* Small Mobile Screens (Max Width: 480px) */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 70px 15px 20px;
+    }
+
+    .data-card {
+        padding: 15px;
+    }
+
+    .pagination {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .page-info {
+        text-align: center;
+    }
 }
