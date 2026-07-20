@@ -90,7 +90,6 @@ async function initForm() {
         document.getElementById('email').value = data.email || '';
         document.getElementById('username').value = data.username || '';
         document.getElementById('role').value = data.role || 'STUDENT';
-        document.getElementById('division').value = data.division || 'STUDENT';
         document.getElementById('status').value = data.status || 'ACTIVE';
       } else {
         showMessage("User not found.", "error");
@@ -126,7 +125,6 @@ document.getElementById('userForm').addEventListener('submit', async (e) => {
     email: document.getElementById('email').value.trim(),
     username: document.getElementById('username').value.trim(),
     role: document.getElementById('role').value,
-    division: document.getElementById('division').value
   };
 
   try {
