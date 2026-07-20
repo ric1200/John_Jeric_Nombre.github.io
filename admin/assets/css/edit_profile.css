@@ -13,6 +13,7 @@ body {
     padding: 30px 40px;
     min-height: 100vh;
     box-sizing: border-box;
+    transition: margin-left 0.3s ease, padding 0.3s ease; /* Smooth sidebar toggle transition */
 }
 
 .container { 
@@ -104,15 +105,13 @@ body {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 0.95rem;
-    /* UPDATED: Mas dark at mas clear na text para sa actual input */
     color: #111827; 
     font-weight: 500; 
     background: #f8fafc;
     transition: all 0.3s ease;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Prevents input from breaking layout width */
 }
 
-/* ADDED: Placeholder styling para manatiling gray ang examples ("e.g. Ramos") */
 .form-control::placeholder {
     color: #94a3b8;
     font-weight: normal;
@@ -138,6 +137,7 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .btn-save {
@@ -185,7 +185,55 @@ body {
     border-left: 5px solid #ef4444;
 }
 
-@media (max-width: 992px) {
-    .main-content { margin-left: 0; }
-    .form-grid, .form-grid.two-cols { grid-template-columns: 1fr; }
+/* =========================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================= */
+
+/* Tablets & Laptops (Max Width: 1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0; /* Align full width to match the off-canvas sidebar */
+        padding: 70px 20px 30px; /* Add top space for mobile hamburger toggle */
+    }
+}
+
+/* Standard Mobile View (Max Width: 768px) */
+@media (max-width: 768px) {
+    .form-grid, .form-grid.two-cols { 
+        grid-template-columns: 1fr; /* Stack form inputs vertically */
+        gap: 15px;
+    }
+    
+    .data-card {
+        padding: 24px; /* Shrink padding slightly to maximize screen space */
+    }
+}
+
+/* Small Mobile Phones (Max Width: 480px) */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 70px 15px 20px;
+    }
+
+    .page-header {
+        padding: 20px 15px;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .data-card {
+        padding: 20px 15px;
+    }
+
+    .form-actions {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+    }
+
+    .form-actions .btn {
+        width: 100%; /* Make buttons full-width */
+        justify-content: center; /* Center the text inside the button */
+    }
 }

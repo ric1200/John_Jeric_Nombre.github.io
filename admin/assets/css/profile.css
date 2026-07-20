@@ -13,6 +13,7 @@ body {
     padding: 30px 40px;
     min-height: 100vh;
     box-sizing: border-box;
+    transition: margin-left 0.3s ease, padding 0.3s ease; /* Added for smooth sidebar toggle */
 }
 
 .container { 
@@ -153,6 +154,13 @@ body {
     font-size: 1.2rem;
     margin-right: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    flex-shrink: 0; /* Prevents icon from squishing on mobile */
+}
+
+/* Wrapper to hold text so it respects the container limits */
+.detail-item > div {
+    min-width: 0; 
+    flex: 1;
 }
 
 .detail-label { 
@@ -164,9 +172,12 @@ body {
 }
 
 .detail-value { 
+    display: block;
     font-size: 1rem; 
     color: #1e293b; 
     font-weight: 500; 
+    word-break: break-word; /* Prevents long emails/addresses from causing horizontal scroll */
+    overflow-wrap: break-word;
 }
 
 /* Buttons */
@@ -192,7 +203,60 @@ body {
     box-shadow: 0 4px 12px rgba(45, 120, 255, 0.3); 
 }
 
-@media (max-width: 900px) {
-    .main-content { margin-left: 0; }
-    .profile-grid { grid-template-columns: 1fr; }
+/* =========================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================= */
+
+/* Tablets & Laptops (Max Width: 1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0; /* Accommodate hidden/off-canvas sidebar */
+        padding: 70px 20px 30px; /* Top padding to prevent mobile toggle overlap */
+    }
+    
+    .profile-grid { 
+        grid-template-columns: 1fr; /* Stack the grid on tablets instead of waiting for 900px */
+    }
+}
+
+/* Standard Mobile View (Max Width: 768px) */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 20px;
+    }
+    
+    .data-card {
+        padding: 24px; /* Shrink inner padding slightly */
+    }
+}
+
+/* Small Mobile Phones (Max Width: 480px) */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 70px 15px 20px;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem; /* Scale down title */
+    }
+
+    .avatar-container {
+        width: 130px; /* Slightly smaller avatar to save vertical space */
+        height: 130px;
+    }
+
+    .detail-item {
+        padding: 12px; /* Optimize space inside detail rows */
+    }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        margin-right: 12px;
+    }
+
+    .detail-value {
+        font-size: 0.95rem; /* Slight font scale down to prevent crowding */
+    }
 }
