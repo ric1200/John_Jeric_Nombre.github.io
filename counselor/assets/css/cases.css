@@ -1,0 +1,129 @@
+/* --- LAYOUT WRAPPER --- */
+.content-section {
+    max-width: 1200px; /* Sukat ng table card */
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.header-title {
+    margin-bottom: 30px;
+}
+
+.header-title h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #2d3436;
+    letter-spacing: -0.5px;
+}
+
+.header-title p {
+    color: #8c92a0;
+    font-size: 0.95rem;
+}
+
+/* --- TABLE CARD --- */
+.card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+    border: 1px solid #e9ecef;
+}
+
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.card-header-flex h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+/* --- DATA TABLE --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background-color: #f8f9fb;
+}
+
+.data-table th {
+    text-align: left;
+    padding: 16px 12px;
+    font-size: 0.85rem;
+    color: #8c92a0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table td {
+    padding: 16px 12px;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table tbody tr {
+    transition: 0.2s;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f9fafc;
+}
+
+/* --- BADGES --- */
+.badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-high { background-color: #fdecea; color: #e74c3c; }
+.badge-progress { background-color: #fff4e5; color: #f39c12; }
+.badge-normal { background-color: #eafaf1; color: #2ecc71; }
+.badge-resolved { background-color: #e8f5e9; color: #27ae60; }
+
+/* --- BUTTONS --- */
+.btn-primary {
+    background-color: #4267b2;
+    color: #fff !important;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #365899;
+    transform: translateY(-1px);
+}
+
+.btn-sm {
+    background-color: #eef2f7;
+    color: #4267b2;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-sm:hover {
+    background-color: #4267b2;
+    color: #fff;
+}
