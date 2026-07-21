@@ -6,8 +6,6 @@
   <title>Counselor Login</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- TAMA NA ANG PATH DITO (Tinanggal ang ../ para hindi mawala ang design) -->
   <link rel="stylesheet" href="assets/css/style.css" />
   
   <style>
@@ -42,25 +40,26 @@
     <div class="right-section">
       <form id="loginForm" class="login-form">
         <h2>Welcome Back</h2>
-        <p class="subtitle">Login to access your dashboard</p>
+        <p class="subtitle">Login to access your counselor dashboard</p>
 
         <!-- Error message container -->
         <div id="error-message" class="error-msg"></div>
 
         <label for="username">Email Address</label>
-        <input type="email" id="username" name="username" required />
+        <input type="email" id="username" name="username" required autocomplete="email" />
 
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-        <!-- Idagdag itong checkbox sa ilalim ng password field -->
-        <div style="margin-top: 5px; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+        <input type="password" id="password" name="password" required autocomplete="current-password" />
+        
+        <div style="margin-top: 8px; font-size: 14px; display: flex; align-items: center; gap: 5px;">
           <input type="checkbox" id="showPassword" />
           <label for="showPassword" style="margin: 0; cursor: pointer;">Show Password</label>
         </div>
+
         <button type="submit" id="loginBtn" class="login-btn">Login</button>
       
         <div class="links">
-            <a href="sysad/forgot-password.html">Forgot your password?</a>
+            <a href="forgot-password.html">Forgot your password?</a>
         </div>
 
         <div class="footer">
@@ -71,7 +70,6 @@
 
   </div>
 
-  <!-- TAMA NA ANG PATH DITO (Tinanggal ang ../ para mahanap ang script) -->
   <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>

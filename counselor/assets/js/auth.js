@@ -1,4 +1,4 @@
-// 1. I-import ang mga kinakailangang Firebase modules (Pinalitan ng v10.8.0 at dinagdag ang signOut)
+// 1. I-import ang mga kinakailangang Firebase modules (v10.8.0)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -39,8 +39,8 @@ showPasswordCheckbox.addEventListener('change', function() {
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault(); // Pigilan ang pag-refresh ng page
   
-  const email = emailInput.value;
-  const password = passwordInput.value;
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
 
   // Itago muna ang error message at palitan ang text ng button
   errorMessage.style.display = 'none';
@@ -52,42 +52,50 @@ loginForm.addEventListener('submit', async (e) => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Step B: Kunin ang data ng user sa Firestore para malaman ang Role
+      // Step B: Kunin ang data ng user sa Firestore para malaman ang Role at Status
       const userDocRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
 
-          // 👇 ITO ANG BAGONG HARANG PARA SA MGA INACTIVE USERS 👇
+          // 🛑 HARANG 1: KAPAG INACTIVE ACCOUNT
           if (userData.status === 'INACTIVE') {
-              await signOut(auth); // I-logout agad sa background para walang matirang session
-              throw new Error("deactivated-account"); // Ipasa sa catch block sa ibaba ang error
+              await signOut(auth); // I-logout agad para walang matirang session
+              throw new Error("deactivated-account");
           }
 
-          const role = userData.role;
+          // 🛑 HARANG 2: COUNSELOR ROLE CHECK (Strict Verification)
+          // Tinitiyak nito na COUNSELOR lang ang makakapasok dito
+          if (userData.role !== 'COUNSELOR') {
+              await signOut(auth); // Piliting i-logout kapag hindi counselor
+              throw new Error("unauthorized-role");
+          }
 
-          // Kapag successful ang login at ACTIVE ang user:
+          // Kapag successful ang login, ACTIVE, at COUNSELOR ang user:
           errorMessage.style.display = 'block';
           errorMessage.style.backgroundColor = '#d4edda';
           errorMessage.style.color = '#155724';
           errorMessage.style.borderColor = '#c3e6cb';
-          errorMessage.innerText = `Login successful! Redirecting ${role}...`;
+          errorMessage.innerText = `Login successful! Welcome Counselor. Redirecting...`;
 
-          // Step C: I-redirect ang user sa Dashboard
+          // Save role to session storage for UI awareness
+          sessionStorage.setItem('userRole', userData.role);
+
+          // Step C: I-redirect ang user sa Counselor Dashboard
           setTimeout(() => {
               window.location.href = "counselor/dashboard.html"; 
-          }, 1500);
+          }, 1200);
 
       } else {
+          await signOut(auth);
           throw new Error("User data not found in database.");
       }
 
   } catch (error) {
-      // Kapag may mali sa email, password, O kapag inactive ang account
       console.error("Login Error:", error);
       
-      // 👇 DITO BINUBURA ANG LAMAN NG PASSWORD TEXTBOX KAPAG NAG-ERROR 👇
+      // BUBURA ANG LAMAN NG PASSWORD TEXTBOX KAPAG NAG-ERROR
       passwordInput.value = '';
       
       errorMessage.style.display = 'block';
@@ -95,16 +103,18 @@ loginForm.addEventListener('submit', async (e) => {
       errorMessage.style.color = '#d9534f';
       errorMessage.style.borderColor = '#d9534f';
       
-      // Ipakita ang tamang error message depende sa nangyari
+      // Ipakita ang tamang error message depende sa dahilan
       if (error.message === 'deactivated-account') {
           errorMessage.innerText = "Login Error: Your account has been deactivated. Please contact the administrator.";
+      } else if (error.message === 'unauthorized-role') {
+          errorMessage.innerText = "Access Denied: This login portal is strictly reserved for Counselors.";
       } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
           errorMessage.innerText = "Login Error: Invalid email or password.";
       } else {
           errorMessage.innerText = `Error: ${error.message}`;
       }
   } finally {
-      // Ibalik sa normal ang button kahit nagka-error
+      // Ibalik sa normal ang button
       loginBtn.innerText = "Login";
       loginBtn.disabled = false;
   }
