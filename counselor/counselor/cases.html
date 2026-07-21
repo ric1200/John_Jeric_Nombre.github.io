@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Management - Counselor Dashboard</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="../assets/css/header.css">
+    <link rel="stylesheet" href="../assets/css/cases.css">
+</head>
+<body>
+
+    <!-- Header Injection Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-section">
+        <div class="header-title">
+            <h1>Case Management</h1>
+            <p>Track, update, and manage student counseling records securely</p>
+        </div>
+
+        <div class="card">
+            <div class="controls-container">
+                <!-- Filter Form -->
+                <form id="filterForm" class="filter-group" onsubmit="event.preventDefault();">
+                    <input type="text" id="searchInput" class="search-input text-search" placeholder="Search name or ID...">
+                    
+                    <select id="priorityFilter" class="search-input">
+                        <option value="">All Priorities</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+
+                    <select id="statusFilter" class="search-input">
+                        <option value="">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+
+                    <input type="month" id="monthFilter" class="search-input" title="Filter by Month">
+
+                    <button type="submit" id="btnFilter" class="search-btn"><i class="fas fa-search"></i> Filter</button>
+                    <button type="button" id="btnClear" class="search-btn" style="background:#dc3545; display:none;" title="Clear Filters">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </form>
+
+                <div class="action-buttons">
+                    <button onclick="window.print()" class="btn-print"><i class="fas fa-print"></i> Print</button>
+                    <a href="add_case.html" class="btn-primary" style="padding: 10px 15px; border-radius: 6px; text-decoration:none;"><i class="fas fa-plus"></i> Add Case</a>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Case ID</th>
+                            <th>System User ID</th>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Date Created</th>
+                            <th class="hide-on-print">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="casesTableBody">
+                        <tr>
+                            <td colspan="9" style="text-align:center; padding: 40px; color: #8c92a0;">
+                                Loading cases data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Dynamic Pagination -->
+            <div class="pagination" id="paginationContainer"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="../assets/js/header.js"></script>
+    <script type="module" src="../assets/js/cases.js"></script>
+</body>
+</html>

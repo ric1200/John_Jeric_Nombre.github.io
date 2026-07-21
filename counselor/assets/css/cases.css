@@ -1,6 +1,6 @@
 /* --- LAYOUT WRAPPER --- */
 .content-section {
-    max-width: 1200px; /* Sukat ng table card */
+    max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
@@ -30,17 +30,75 @@
     border: 1px solid #e9ecef;
 }
 
-.card-header-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
+/* --- CONTROLS & FILTERS --- */
+.controls-container { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    margin-bottom: 20px; 
+    flex-wrap: wrap; 
+    gap: 15px; 
 }
 
-.card-header-flex h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #1a1a1a;
+.filter-group { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    flex-grow: 1; 
+    align-items: center;
+}
+
+.search-input { 
+    padding: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    font-size: 0.9rem; 
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: #4267b2;
+}
+
+.search-input.text-search { 
+    min-width: 200px; 
+}
+
+.search-btn { 
+    background: #6c757d; 
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: 0.3s;
+}
+
+.search-btn:hover { 
+    background: #5a6268; 
+}
+
+.action-buttons { 
+    display: flex; 
+    gap: 10px; 
+    margin-top: 2px;
+}
+
+.btn-print { 
+    background: #6c757d; 
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    text-decoration: none; 
+    font-size: 0.9rem; 
+    transition: 0.3s;
+}
+
+.btn-print:hover { 
+    background: #5a6268; 
 }
 
 /* --- DATA TABLE --- */
@@ -78,6 +136,10 @@
     background-color: #f9fafc;
 }
 
+.data-table th:last-child, .data-table td:last-child { 
+    white-space: nowrap; 
+}
+
 /* --- BADGES --- */
 .badge {
     padding: 6px 14px;
@@ -113,6 +175,8 @@
 }
 
 .btn-sm {
+    white-space: nowrap; 
+    display: inline-block;
     background-color: #eef2f7;
     color: #4267b2;
     text-decoration: none;
@@ -126,4 +190,74 @@
 .btn-sm:hover {
     background-color: #4267b2;
     color: #fff;
+}
+
+/* --- PAGINATION --- */
+.pagination { 
+    display: flex; 
+    justify-content: center; 
+    gap: 5px; 
+    margin-top: 20px; 
+    flex-wrap: wrap;
+}
+
+.page-link { 
+    padding: 8px 12px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    text-decoration: none; 
+    color: #333; 
+    transition: 0.3s; 
+    cursor: pointer;
+}
+
+.page-link:hover { 
+    background: #f0f0f0; 
+}
+
+.page-link.active { 
+    background: #4267b2; 
+    color: white; 
+    border-color: #4267b2; 
+    pointer-events: none; 
+}
+
+/* --- PRINT SPECIFIC STYLES --- */
+@media print {
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+    header, nav, .top-nav, footer, .controls-container, .header-title p, .pagination, .hide-on-print { 
+        display: none !important; 
+    }
+    body { 
+        background: white; 
+        margin: 0; 
+        padding: 0; 
+    }
+    .content-section, .card { 
+        box-shadow: none; 
+        margin: 0; 
+        border: none; 
+        width: 100%; 
+        max-width: 100%; 
+        padding: 0; 
+    }
+    .data-table { 
+        border-collapse: collapse; 
+        width: 100%; 
+        table-layout: fixed; 
+    }
+    .data-table th, .data-table td { 
+        border: 1px solid #000; 
+        padding: 5px; 
+        font-size: 10px; 
+        word-wrap: break-word; 
+        overflow-wrap: break-word;
+    }
+    .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 8%; }
+    .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 10%; }
+    .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 10%; }
+    .data-table th:nth-child(7), .data-table td:nth-child(7) { width: 10%; }
 }
