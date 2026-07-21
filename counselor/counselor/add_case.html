@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Case - Counselor Dashboard</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Select2 CSS for Searchable Dropdown -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <!-- Global Header CSS -->
+    <link rel="stylesheet" href="../assets/css/header.css">
+    
+    <style>
+        .content-section { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .form-card { background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid #eef2f7; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 0.95rem; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        .form-control:focus { border-color: #4267b2; }
+        .back-link { text-decoration: none; color: #6c757d; font-size: 0.9rem; margin-bottom: 10px; display: inline-block; transition: 0.3s; }
+        .back-link:hover { color: #4267b2; }
+        .btn-save { background: #4267b2; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Poppins', sans-serif; }
+        .btn-save:hover { background: #365899; }
+        .btn-cancel { text-decoration: none; color: #6c757d; padding: 12px 20px; font-weight: 500; }
+        .btn-cancel:hover { color: #e74c3c; }
+        
+        /* Select2 Customization to match Poppins */
+        .select2-container--default .select2-selection--single { height: 48px; border: 1px solid #ddd; border-radius: 8px; display: flex; align-items: center; }
+        .select2-container--default .select2-selection--single .select2-selection__arrow { height: 46px; }
+
+        /* Alert Messages */
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; font-weight: 500; font-size: 0.95rem; }
+        .alert-success { background: #eafaf1; color: #2ecc71; border: 1px solid #d5f5e3; }
+        .alert-error { background: #fdf2f2; color: #e74c3c; border: 1px solid #fadbd8; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-section">
+        <div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 style="font-weight: 800; margin:0; color: #2d3436; font-size: 2.2rem; letter-spacing: -0.5px;">Add New Case</h1>
+                <p style="color: #8c92a0; font-size: 0.95rem;" id="counselorInfo">Recording as Counselor ID: Loading...</p>
+            </div>
+            <a href="cases.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Directory</a>
+        </div>
+
+        <div class="form-card">
+            
+            <!-- Message Alerts -->
+            <div id="successMsg" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> Case successfully created!
+            </div>
+            <div id="errorMsg" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i> <span id="errorText">Error saving case.</span>
+            </div>
+
+            <form id="addCaseForm">
+                <div class="form-grid">
+                    
+                    <div class="form-group full-width">
+                        <label>Select Student</label>
+                        <select name="student_user_id" id="studentSelect" class="form-control" required>
+                            <option value="">Loading students...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Case Title</label>
+                        <input type="text" id="titleInput" class="form-control" placeholder="e.g., Behavior Issue" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="prioritySelect" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <textarea id="descInput" class="form-control" style="height: 150px; resize: vertical;" placeholder="Enter case details..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Initial Status</label>
+                        <select id="statusSelect" class="form-control">
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; text-align: right;">
+                    <a href="cases.html" class="btn-cancel">Cancel</a>
+                    <button type="submit" id="btnSubmit" class="btn-save">Create Case Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- Firebase Logic -->
+    <script type="module" src="../assets/js/header.js"></script>
+    <script type="module" src="../assets/js/add_case.js"></script>
+</body>
+</html>
