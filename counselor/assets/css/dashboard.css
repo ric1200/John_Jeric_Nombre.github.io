@@ -1,3 +1,40 @@
+/* --- GLOBAL RESET & BASE SETTINGS --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    overflow-x: hidden; /* Strictly prevents horizontal scrolling */
+    padding: 20px; /* Provides breathing room on all sides */
+    background-color: #f4f6f9; /* Ensures the white cards stand out */
+}
+
+/* --- LAYOUT CONTAINER --- */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; /* Centers the layout on large screens */
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    color: #2d3436;
+    line-height: 1.2;
+}
+
+.page-header p {
+    color: #8c92a0;
+    margin-top: 5px;
+}
+
 /* --- STATS GRID --- */
 .stats-grid {
     display: grid;
@@ -40,6 +77,8 @@
     padding: 25px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
     min-height: 300px;
+    display: flex;
+    flex-direction: column; /* Ensures chart canvas scales properly inside */
 }
 
 .chart-card h3 {
@@ -49,16 +88,59 @@
     margin-bottom: 20px;
 }
 
-.mock-bar-chart {
-    background-color: #90caf9;
-    height: 200px;
-    width: 80%;
-    margin: 0 auto;
-    border-bottom: 2px solid #e0e0e0;
+.chart-container {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    flex-grow: 1;
 }
 
-.mock-line-chart {
-    border-bottom: 2px solid #e0e0e0;
-    height: 200px;
-    width: 100%;
+/* =======================================================
+   RESPONSIVE FIXES (MEDIA QUERIES)
+   ======================================================= */
+
+/* Laptop / Large Tablet Breakpoint */
+@media (max-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr); /* Forms a 2x2 Grid */
+    }
+    .charts-grid {
+        grid-template-columns: 1fr; /* Stacks charts vertically */
+    }
+}
+
+/* Tablet / Mobile Breakpoint */
+@media (max-width: 768px) {
+    body {
+        padding: 15px; /* Reclaims screen space on smaller devices */
+    }
+    
+    .page-header h1 {
+        font-size: 1.6rem; /* Shrinks title slightly to avoid wrapping issues */
+    }
+
+    .stat-card {
+        padding: 20px 15px;
+    }
+    
+    .chart-card {
+        padding: 20px; 
+        min-height: 280px;
+    }
+}
+
+/* Small Mobile Phones Breakpoint */
+@media (max-width: 576px) {
+    .stats-grid {
+        grid-template-columns: 1fr; /* Stacks stat cards completely vertical */
+        gap: 15px; /* Shrinks the gap slightly to save screen height */
+    }
+
+    .stat-card .stat-value {
+        font-size: 2.2rem; /* Shrinks huge numbers slightly so they don't hit padding edges */
+    }
+
+    .charts-grid {
+        gap: 15px;
+    }
 }
