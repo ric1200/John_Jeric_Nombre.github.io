@@ -1,5 +1,5 @@
 /* --- GLOBAL RESET & BASE --- */
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -10,6 +10,7 @@ body {
     background-color: #f4f6f9;
     color: #333;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 /* --- TOP NAVIGATION --- */
@@ -37,7 +38,7 @@ body {
 .nav-brand .logo-circle {
     width: 40px;
     height: 40px;
-    object-fit: contain; /* Para sa actual na image logo */
+    object-fit: contain;
 }
 
 .nav-links {
@@ -45,17 +46,38 @@ body {
     gap: 25px;
     font-weight: 500;
     font-size: 0.95rem;
+    align-items: center;
 }
 
 .nav-links a {
     text-decoration: none;
     color: #4a4a4a;
-    transition: color 0.2s;
+    transition: color 0.2s ease-in-out;
 }
 
-.nav-links a:hover { color: #4267b2; }
-.nav-links a.active { font-weight: 600; color: #4267b2; }
-.nav-links a.logout { color: #e74c3c; }
+.nav-links a:hover { 
+    color: #4267b2; 
+}
+
+.nav-links a.active { 
+    font-weight: 600; 
+    color: #4267b2; 
+}
+
+.nav-links a.logout { 
+    color: #e74c3c; 
+    font-weight: 600;
+}
+
+/* Mobile Toggle Button (Hidden on Desktop) */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    cursor: pointer;
+}
 
 /* --- REUSABLE LAYOUT CLASSES --- */
 .container {
@@ -78,4 +100,33 @@ body {
 .page-header p {
     color: #8c92a0;
     font-size: 0.95rem;
+}
+
+
+@media (max-width: 868px) {
+    .top-nav {
+        padding: 15px 20px;
+    }
+
+    .nav-toggle {
+        display: block; /* Ipakita ang hamburger icon sa mobile/tablet */
+    }
+
+    .nav-links {
+        display: none; /* Itago muna ang links */
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        gap: 15px;
+        text-align: center;
+    }
+
+    .nav-links.show {
+        display: flex; /* Lalabas kapag pino-toggle ang hamburger menu */
+    }
 }
