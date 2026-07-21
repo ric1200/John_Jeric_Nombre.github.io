@@ -104,7 +104,7 @@ addCaseForm.addEventListener('submit', async (e) => {
     btnSubmit.disabled = true;
 
     try {
-        // I-save sa 'cases' collection
+        // I-save sa 'cases' collectionas
         const docRef = await addDoc(collection(db, "cases"), {
             counselor_id: currentCounselorId,
             student_user_id: studentDbId,
