@@ -1,105 +1,111 @@
-// ==========================================================
-// 1. FIREBASE IMPORTS (Mula sa centralized config)
-// ==========================================================
-import { auth, db } from "./firebase_config.js"; 
-import { signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+// 1. I-import ang mga kinakailangang Firebase modules (Pinalitan ng v10.8.0 at dinagdag ang signOut)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const loginForm = document.getElementById("loginForm");
-const errorMessage = document.getElementById("error-message");
-const submitBtn = document.querySelector(".login-btn");
+// 2. Ang iyong Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD6PsiCJWwMamIn-XXUcYccgJMU-D4wdh0",
+  authDomain: "ricproject-bb8fc.firebaseapp.com",
+  projectId: "ricproject-bb8fc",
+  storageBucket: "ricproject-bb8fc.firebasestorage.app",
+  messagingSenderId: "1055032684339",
+  appId: "1:1055032684339:web:fea2712ffeee1008299846"
+};
 
-// ==========================================================
-// 2. URL PARAMETER CHECK (PHP $_GET Replacement)
-// ==========================================================
-const urlParams = new URLSearchParams(window.location.search);
-const errorParam = urlParams.get('error');
+// 3. I-initialize ang Firebase, Auth, at Database
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-if (errorParam === 'invalid') {
-    showError("Invalid username or password.");
-} else if (errorParam === 'empty') {
-    showError("Please fill in all fields.");
-}
+// 4. Kunin ang mga elements mula sa HTML
+const loginForm = document.getElementById('loginForm');
+const emailInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const errorMessage = document.getElementById('error-message');
+const loginBtn = document.getElementById('loginBtn');
+const showPasswordCheckbox = document.getElementById('showPassword');
 
-// ==========================================================
-// 3. FORM SUBMISSION LOGIC (Firebase Login & Role Check)
-// ==========================================================
-loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault(); 
-
-    const identifier = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    if (!identifier || !password) {
-        showError("Please fill in all fields.");
-        return;
-    }
-
-    // I-disable ang button habang naglo-load
-    submitBtn.disabled = true;
-    submitBtn.innerText = "Verifying...";
-    errorMessage.style.display = "none";
-
-    try {
-        let targetEmail = identifier;
-
-        // HAKBANG 1: Kung Username ang tinype (walang @), kunin ang Email sa Firestore
-        if (!identifier.includes('@')) {
-            const usersRef = collection(db, "users");
-            const q = query(usersRef, where("username", "==", identifier));
-            const querySnapshot = await getDocs(q);
-
-            if (!querySnapshot.empty) {
-                targetEmail = querySnapshot.docs[0].data().email;
-            } else {
-                throw new Error("invalid-credential"); // Para pareho ang error message kung mali
-            }
-        }
-
-        // HAKBANG 2: Mag-Login gamit ang Firebase Auth
-        const userCredential = await signInWithEmailAndPassword(auth, targetEmail, password);
-        const user = userCredential.user;
-
-        // HAKBANG 3: I-verify ang Role sa Firestore
-        const usersRef = collection(db, "users");
-        // Hahanapin natin yung document na may UID na ito para mabilis
-        const qRole = query(usersRef, where("email", "==", targetEmail));
-        const roleSnapshot = await getDocs(qRole);
-
-        if (!roleSnapshot.empty) {
-            const userData = roleSnapshot.docs[0].data();
-
-            if (userData.role === "COUNSELOR") {
-                // SUCCESS! Counselor nga siya.
-                sessionStorage.setItem('role', userData.role);
-                window.location.href = "counselor/dashboard.html"; // I-redirect mo sa totoong dashboard mo
-            } else {
-                // FAILURE: Tama ang password pero HINDI siya Counselor (Hal. Admin/Student)
-                await signOut(auth); // Pilitin silang i-logout sa background
-                showError("Access Denied. This login is strictly for Counselors only.");
-            }
-        } else {
-             throw new Error("invalid-credential");
-        }
-
-    } catch (error) {
-        console.error("Login Error:", error);
-        
-        // Patalastas kung mali ang password o email/username
-        if (error.code === 'auth/invalid-credential' || error.message === 'invalid-credential') {
-            showError("Invalid username or password.");
-        } else {
-            showError("System Error: " + error.message);
-        }
-    } finally {
-        // I-balik sa normal ang button kapag tapos na (success man o error)
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Login";
-    }
+// 5. Logic para sa "Show Password" checkbox
+showPasswordCheckbox.addEventListener('change', function() {
+  if (this.checked) {
+      passwordInput.type = 'text';
+  } else {
+      passwordInput.type = 'password';
+  }
 });
 
-// Helper function to display the error text
-function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.style.display = "block";
-}
+// 6. Logic kapag pinindot ang "Login" button
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault(); // Pigilan ang pag-refresh ng page
+  
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  // Itago muna ang error message at palitan ang text ng button
+  errorMessage.style.display = 'none';
+  loginBtn.innerText = "Logging in...";
+  loginBtn.disabled = true;
+
+  try {
+      // Step A: Mag-login sa Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Step B: Kunin ang data ng user sa Firestore para malaman ang Role
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+
+          // 👇 ITO ANG BAGONG HARANG PARA SA MGA INACTIVE USERS 👇
+          if (userData.status === 'INACTIVE') {
+              await signOut(auth); // I-logout agad sa background para walang matirang session
+              throw new Error("deactivated-account"); // Ipasa sa catch block sa ibaba ang error
+          }
+
+          const role = userData.role;
+
+          // Kapag successful ang login at ACTIVE ang user:
+          errorMessage.style.display = 'block';
+          errorMessage.style.backgroundColor = '#d4edda';
+          errorMessage.style.color = '#155724';
+          errorMessage.style.borderColor = '#c3e6cb';
+          errorMessage.innerText = `Login successful! Redirecting ${role}...`;
+
+          // Step C: I-redirect ang user sa Dashboard
+          setTimeout(() => {
+              window.location.href = "counselor/dashboard.html"; 
+          }, 1500);
+
+      } else {
+          throw new Error("User data not found in database.");
+      }
+
+  } catch (error) {
+      // Kapag may mali sa email, password, O kapag inactive ang account
+      console.error("Login Error:", error);
+      
+      // 👇 DITO BINUBURA ANG LAMAN NG PASSWORD TEXTBOX KAPAG NAG-ERROR 👇
+      passwordInput.value = '';
+      
+      errorMessage.style.display = 'block';
+      errorMessage.style.backgroundColor = '#ffe6e6';
+      errorMessage.style.color = '#d9534f';
+      errorMessage.style.borderColor = '#d9534f';
+      
+      // Ipakita ang tamang error message depende sa nangyari
+      if (error.message === 'deactivated-account') {
+          errorMessage.innerText = "Login Error: Your account has been deactivated. Please contact the administrator.";
+      } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMessage.innerText = "Login Error: Invalid email or password.";
+      } else {
+          errorMessage.innerText = `Error: ${error.message}`;
+      }
+  } finally {
+      // Ibalik sa normal ang button kahit nagka-error
+      loginBtn.innerText = "Login";
+      loginBtn.disabled = false;
+  }
+});

@@ -6,7 +6,23 @@
   <title>Counselor Login</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- TAMA NA ANG PATH DITO (Tinanggal ang ../ para hindi mawala ang design) -->
   <link rel="stylesheet" href="assets/css/style.css" />
+  
+  <style>
+    .error-msg {
+      background-color: #ffe6e6;
+      color: #d9534f;
+      border: 1px solid #d9534f;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -28,19 +44,23 @@
         <h2>Welcome Back</h2>
         <p class="subtitle">Login to access your dashboard</p>
 
-        <!-- Dynamic Error Message Placeholder -->
-        <p id="error-message" class="error-msg"></p>
+        <!-- Error message container -->
+        <div id="error-message" class="error-msg"></div>
 
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required />
+        <label for="username">Email Address</label>
+        <input type="email" id="username" name="username" required />
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required />
-
-        <button type="submit" class="login-btn">Login</button>
+        <!-- Idagdag itong checkbox sa ilalim ng password field -->
+        <div style="margin-top: 5px; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" id="showPassword" />
+          <label for="showPassword" style="margin: 0; cursor: pointer;">Show Password</label>
+        </div>
+        <button type="submit" id="loginBtn" class="login-btn">Login</button>
       
         <div class="links">
-            <a href="forgot-password.html">Forgot your password?</a>
+            <a href="sysad/forgot-password.html">Forgot your password?</a>
         </div>
 
         <div class="footer">
@@ -51,6 +71,7 @@
 
   </div>
 
+  <!-- TAMA NA ANG PATH DITO (Tinanggal ang ../ para mahanap ang script) -->
   <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>
