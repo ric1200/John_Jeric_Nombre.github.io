@@ -1,8 +1,4 @@
 /* ===== Global Reset ===== */
-* {
-  box-sizing: border-box; /* Ensures padding/borders don't affect width */
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -12,8 +8,7 @@ body {
   justify-content: center;
   align-items: center;
   background: #eef2f7; /* Light grey background */
-  position: relative;  /* Important for positioning the back button */
-  overflow-x: hidden;  /* Prevents horizontal scrolling */
+  position: relative;   /* Important for positioning the back button */
 }
 
 /* ===== Back Button (Upper Left) ===== */
@@ -52,13 +47,12 @@ body {
   border-radius: 14px;
   overflow: hidden;
   background: white;
-  width: 90%; /* Added to ensure it fits nicely on smaller screens */
-  max-width: 900px;
 }
 
 /* ===== Left Section (Image) ===== */
 .left-section {
   flex: 1;
+  /* Make sure this path is correct */
   background: url("../image/bg_img.jpg") no-repeat center center;
   background-size: cover;
   position: relative;
@@ -118,15 +112,6 @@ body {
   margin-bottom: 30px;
 }
 
-/* ===== Dynamic Error Message ===== */
-.error-msg {
-  color: red;
-  margin-bottom: 10px;
-  font-size: 14px;
-  display: none; /* Hidden by default, toggled by JS */
-  text-align: center;
-}
-
 label {
   display: block;
   font-weight: 600;
@@ -136,7 +121,9 @@ label {
   font-size: 14px;
 }
 
+/* Idinagdag dito ang input[type="email"] para maging pantay sila */
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   width: 100%;
   padding: 12px;
@@ -148,7 +135,9 @@ input[type="password"] {
   transition: border 0.3s, box-shadow 0.3s;
 }
 
+/* Idinagdag din dito ang input[type="email"]:focus para gumana rin ang glow effect */
 input[type="text"]:focus,
+input[type="email"]:focus,
 input[type="password"]:focus {
   border-color: #004080;
   box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
@@ -223,17 +212,5 @@ input[type="password"]:focus {
   .back-btn {
     top: 20px;
     left: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Minor adjustments for small mobile phones */
-  .right-section {
-    padding: 30px 20px;
-  }
-  
-  .back-btn {
-    font-size: 12px;
-    padding: 8px 16px;
   }
 }
